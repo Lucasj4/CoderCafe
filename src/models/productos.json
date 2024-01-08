@@ -1,3 +1,16 @@
 [
-  
+  {
+    "id": 1,
+    "title": "Nombre4 del producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC128",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  }
 ]

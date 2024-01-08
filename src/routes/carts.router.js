@@ -72,6 +72,10 @@ router.post('/carts/:cid/product/:pid', async (req, res) => {
     const cartId = parseInt(req.params.cid);
     const productId = parseInt(req.params.pid);
     const quantify = parseInt(req.body.quantify);
+
+    if (cartId < 0 || productId < 0) {
+        return res.status(400).json({ error: 'El ID del carrito o del producto no puede ser un número negativo.' });
+    }
     try {
         // Llama al método addProductToCart del CartManager
         const updatedCart = await manager.addProductToCart(cartId, productId, quantify);

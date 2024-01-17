@@ -1,11 +1,12 @@
-const express = require('express');
-const router = express.Router();
+import express from "express";
+
+export const cartsRouter = express.Router();
 
 
-const CartManager = require("../controllers/cart-manager.js");
+import CartManager from "../controllers/cart-manager.js";
 const manager = new CartManager("./src/models/carts.json");
 
-router.get('/carts', async (req, res) => {
+cartsRouter.get('/', async (req, res) => {
     try {
         const carts = await manager.getAllCarts();
         res.json(carts);
@@ -15,7 +16,7 @@ router.get('/carts', async (req, res) => {
     }
 });
 
-router.get('/carts/:cid', async (req, res) => {
+cartsRouter.get('/:cid', async (req, res) => {
     const cartId = parseInt(req.params.cid);
 
     try {
@@ -35,31 +36,17 @@ router.get('/carts/:cid', async (req, res) => {
 });
 
 
-// router.post('/carts', async (req, res) => {
-//     try {
-//         const products = req.body.products || [];  // Obtiene los productos del cuerpo de la solicitud
 
-//         // Llamada al método addCart pasando los productos
-//         const newCart = await manager.addCart(products);
 
-//         // Envía una respuesta 201 indicando que el carrito se ha creado con éxito
-//         res.status(200).json({ message: 'Carrito creado con éxito', cart: newCart });
-//     } catch (error) {
-//         console.error("Error al crear carrito:", error);
-//         res.status(400).json({ error: error.message });
-//     }
-// });
-
-router.post('/carts', async (req, res) => {
+cartsRouter.post('/', async (req, res) => {
     try {
-        // Imprime quantify
+      
 
         const products = req.body;
 
-        // Llamada al método addCart pasando los productos
+       
         const newCart = await manager.addCart(products);
 
-        // Envía una respuesta 201 indicando que el carrito se ha creado con éxito
         res.status(200).json({ message: 'Carrito creado con éxito', cart: newCart });
     } catch (error) {
         console.error("Error al crear carrito:", error);
@@ -68,7 +55,7 @@ router.post('/carts', async (req, res) => {
 });
 
 
-router.post('/carts/:cid/product/:pid', async (req, res) => {
+cartsRouter.post('/:cid/product/:pid', async (req, res) => {
     const cartId = parseInt(req.params.cid);
     const productId = parseInt(req.params.pid);
     const quantify = parseInt(req.body.quantify);
@@ -88,5 +75,4 @@ router.post('/carts/:cid/product/:pid', async (req, res) => {
 })
 
 
-module.exports = router;
 

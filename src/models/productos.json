@@ -1,10 +1,38 @@
 [
   {
-    "id": 1,
-    "title": "Nombre4 del producto",
+    "id": 2,
+    "title": "Teclado",
     "description": "Descripción detallada del producto",
     "price": 100.5,
-    "code": "ABC128",
+    "code": "ABC123",
+    "stock": 100,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Teclado 3",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC125",
+    "stock": 500,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Nombre6 del producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC129",
     "stock": 50,
     "status": true,
     "category": "Electrónicos",
@@ -12,5 +40,156 @@
       "URL_thumbnail_1",
       "URL_thumbnail_2"
     ]
+  },
+  {
+    "id": 5,
+    "title": "Nombre7 del producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC1",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC12",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC12333",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 8,
+    "title": "producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC1256",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 11,
+    "title": "producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC13434",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 12,
+    "title": "producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC13s",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 13,
+    "title": "producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC13344s",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 14,
+    "title": "producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC1334sdf4s",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 15,
+    "title": "producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC13sdfsdf34sdf4s",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 16,
+    "title": "producto",
+    "description": "Descripción detallada del producto",
+    "price": 100.5,
+    "code": "ABC13sdfssdfsssddddf34sdf4s",
+    "stock": 50,
+    "status": true,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "URL_thumbnail_1",
+      "URL_thumbnail_2"
+    ]
+  },
+  {
+    "id": 17,
+    "title": "Producto 1",
+    "description": "asdfasdf",
+    "price": "1000",
+    "code": "asadf",
+    "stock": "10001",
+    "status": true,
+    "category": "Electronico",
+    "thumbnails": []
   }
 ]

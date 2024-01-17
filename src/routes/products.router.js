@@ -1,22 +1,22 @@
-const express = require('express');
-const router = express.Router();
+import  express  from "express";
+export const productsRouter = express.Router();
 
-const ProductManager = require("../controllers/product-manager.js"); 
+import ProductManager from "../controllers/product-manager.js"; 
 const manager = new ProductManager("./src/models/productos.json");
 
-router.get('/products', async (req, res) => {
+productsRouter.get('/', async (req, res) => {
     try {
         let limit = parseInt(req.query.limit);
         const products = await manager.getProducts(limit);
         res.json(products);
     } catch (error) {
         console.error("Error al obtener productos:", error);
-        res.status(500).send("Error interno del servidor");
+        res.status(500).json("Error interno del servidor");
     }
 
 })
 
-router.get('/products/:pid', async (req, res) => {
+productsRouter.get('/:pid', async (req, res) => {
     const productId = parseInt(req.params.pid);
     try{
      
@@ -36,7 +36,7 @@ router.get('/products/:pid', async (req, res) => {
 
 })
 
-router.post('/products', async (req, res) => {
+productsRouter.post('/', async (req, res) => {
     try {
         const { title, description, price, img, code, stock, category, thumbnails } = req.body;
 
@@ -59,7 +59,7 @@ router.post('/products', async (req, res) => {
     }
 });
 
-router.put('/products/:pid', async(req, res)=>{
+productsRouter.put('/:pid', async(req, res)=>{
     try{
         const productId = parseInt(req.params.pid);
 
@@ -95,7 +95,7 @@ router.put('/products/:pid', async(req, res)=>{
 
 })
 
-router.delete('/products/:pid', async(req,res)=> {
+productsRouter.delete('/:pid', async(req,res)=> {
     try{
         const productId = parseInt(req.params.pid);
         await manager.deleteProduct(productId);
@@ -106,4 +106,3 @@ router.delete('/products/:pid', async(req,res)=> {
     }
 })
 
-module.exports = router;

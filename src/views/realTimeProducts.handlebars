@@ -1,0 +1,58 @@
+<h1>Real Time Products</h1>
+    
+<ul id="productList">
+
+</ul>
+
+
+<h1>Formulario de Producto</h1>
+
+<form id="productForm">
+    <!-- ID del Producto (puede ser un campo oculto si se está actualizando) -->
+    <input type="hidden" id="productId" name="productId" value="2">
+
+    <!-- Título del Producto -->
+    <label for="title">Título:</label>
+    <input type="text" id="title" name="title" required>
+
+    <!-- Descripción del Producto -->
+    <label for="description">Descripción:</label>
+    <textarea id="description" name="description" required></textarea>
+
+    <!-- Precio del Producto -->
+    <label for="price">Precio:</label>
+    <input type="number" id="price" name="price" step="0.01" required>
+
+    <!-- Código del Producto -->
+    <label for="code">Código:</label>
+    <input type="text" id="code" name="code" required>
+
+    <!-- Stock del Producto -->
+    <label for="stock">Stock:</label>
+    <input type="number" id="stock" name="stock" required>
+
+      <select id="status">
+        <option value="true">Activo</option>
+        <option value="false">Inactivo</option>
+    </select>
+
+    <!-- Categoría del Producto -->
+    <label for="category">Categoría:</label>
+    <input type="text" id="category" name="category" required>
+
+    <!-- URL de Thumbnails (puedes agregar más campos según sea necesario) -->
+    <label for="thumbnail1">Thumbnail 1:</label>
+    <input type="text" id="thumbnail1" name="thumbnails" required>
+
+    <label for="thumbnail2">Thumbnail 2:</label>
+    <input type="text" id="thumbnail2" name="thumbnails" required>
+
+    <!-- Botón de Enviar -->
+    <button type="button" id="btnEnviar">Enviar</button>
+</form>
+<!-- Importa la biblioteca de Socket.IO -->
+<script src="/socket.io/socket.io.js"></script>
+<script  type="module" src="/js/index.mjs"></script>
+
+
+

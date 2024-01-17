@@ -1,12 +1,14 @@
-const fs = require("fs").promises;
+import fs from 'node:fs'
+import { io } from '../app.mjs';
 
-class ProductManager {
-
+export default class ProductManager {
+   
     static ultId = 0;
 
     constructor(path) {
         this.products = [];
         this.path = path;
+       
         this.loadProducts();
     }
 
@@ -44,12 +46,15 @@ class ProductManager {
         };
         // Leer productos existentes
         const existingProducts = await this.readFile();
-
+        
         // Agregar el nuevo producto al array existente
         existingProducts.push(newProduct);
 
         // Guardar el array completo con el nuevo producto
         await this.saveFile(existingProducts);
+        
+        io.emit('updateProducts', await this.getProducts());
+        
     }
 
     async getProducts(limit) {
@@ -90,7 +95,7 @@ class ProductManager {
 
     async readFile() {
         try {
-            const respuesta = await fs.readFile(this.path, "utf-8");
+            const respuesta = await fs.promises.readFile(this.path, "utf-8");
             const arrayProductos = JSON.parse(respuesta);
             return arrayProductos;
 
@@ -101,7 +106,7 @@ class ProductManager {
 
     async saveFile(arrayProductos) {
         try {
-            await fs.writeFile(this.path, JSON.stringify(arrayProductos, null, 2));
+            await fs.promises.writeFile(this.path, JSON.stringify(arrayProductos, null, 2));
         } catch (error) {
             console.log("Error al guardar  archivo", error);
         }
@@ -118,6 +123,9 @@ class ProductManager {
                 arrayProductos[index] = { ...arrayProductos[index], ...updatedProduct };
 
                 await this.saveFile(arrayProductos);
+
+                io.emit('updateProducts', await this.getProducts());
+
             } else {
                 console.log("No se encontró el producto");
             }
@@ -134,6 +142,7 @@ class ProductManager {
 
             if (updatedProducts.length < arrayProductos.length) {
                 await this.saveFile(updatedProducts);
+                io.emit('updateProducts', await this.getProducts());
                 console.log("Producto eliminado con éxito");
             } else {
                 console.log("No se encontró el producto");
@@ -146,11 +155,9 @@ class ProductManager {
 
 }
 
+export { ProductManager };
 
 
 
 
 
-
-
-module.exports = ProductManager;

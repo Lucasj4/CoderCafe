@@ -1,6 +1,6 @@
-const fs = require("fs").promises;
+import fs from 'node:fs'
 
-class CartManager {
+export default class CartManager {
     static ultId = 0;
 
     constructor(path) {
@@ -74,7 +74,7 @@ class CartManager {
 
     async readFile() {
         try {
-            const data = await fs.readFile(this.path, "utf-8");
+            const data = await fs.promises.readFile(this.path, "utf-8");
             if (!data.trim()) { // Verifica si el archivo está vacío o solo contiene espacios en blanco.
                 return [];
             }
@@ -125,4 +125,3 @@ class CartManager {
     
 }
 
-module.exports = CartManager;

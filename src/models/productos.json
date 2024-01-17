@@ -180,16 +180,5 @@
       "URL_thumbnail_1",
       "URL_thumbnail_2"
     ]
-  },
-  {
-    "id": 17,
-    "title": "Producto 1",
-    "description": "asdfasdf",
-    "price": "1000",
-    "code": "asadf",
-    "stock": "10001",
-    "status": true,
-    "category": "Electronico",
-    "thumbnails": []
   }
 ]

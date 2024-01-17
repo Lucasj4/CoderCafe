@@ -21,6 +21,9 @@ socket.on('updateProducts', async () => {
             <button> Eliminar Producto </button>
             <hr>
         `;
+        listItem.querySelector('button').addEventListener("click", () => {
+            deleteProduct(product.id);
+        })
         productList.appendChild(listItem);
     });
 
@@ -31,8 +34,12 @@ document.getElementById("btnEnviar").addEventListener("click", () => {
     agregarProducto();
 });
 
+const deleteProduct = (id) => {
+    socket.emit("DeleteProduct", id);
+}
+
 const agregarProducto = () => {
-    console.log("Agregando producto");
+    
     const producto = {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
@@ -44,9 +51,9 @@ const agregarProducto = () => {
         thumbnail1: document.getElementById("thumbnail1").value,
         thumbnail2: document.getElementById("thumbnail2").value
     };
-    console.log(producto);
+
     socket.emit("Addproduct", producto);
-    console.log("Evento 'Addproduct' emitido correctamente");
+    
    
 };
 

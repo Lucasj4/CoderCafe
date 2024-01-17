@@ -17,8 +17,7 @@ const httpServer = app.listen(PORT, () => {
 
 
 app.use(express.json());
-//Esto es un Middleware. 
-//Acá le digo a express que voy a recibir datos en formato JSON. 
+
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -43,10 +42,10 @@ const io = socketIo(httpServer);
 io.on("connection", async (socket) => {
   console.log("Un cliente se conectó");
 
-  // Agrega un log para verificar la conexión
+
   socket.emit('connected', 'Conexión exitosa');
 
-  // Agrega un log para verificar la emisión del evento 'updateProducts'
+
   socket.emit('updateProducts', await productManager.readFile());
   
   socket.on("Addproduct", async (product) => {
@@ -62,10 +61,16 @@ io.on("connection", async (socket) => {
     }
   });
 
-  // Agrega un log para verificar la desconexión
-  socket.on('disconnect', () => {
-    console.log('Cliente desconectado');
-  });
+  socket.on("DeleteProduct", async(id)=>{
+    try{
+      await productManager.deleteProduct(id);
+      io.sockets.emit("updateProducts", await productManager.getProducts());
+
+    }catch(error){
+      console.error("Error al eliminar producto:", error);
+    }
+  })
+
 });
 
 

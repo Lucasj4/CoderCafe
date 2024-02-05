@@ -1,4 +1,4 @@
-console.log('Versión de socket.io en el cliente:', io.version);
+
 
 const socket = io();
 
@@ -56,4 +56,7 @@ const agregarProducto = () => {
     
    
 };
+
+
+
 

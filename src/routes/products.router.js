@@ -7,12 +7,10 @@ const manager = new ProductManager();
 productsRouter.get('/', async (req, res) => {
     const limit = req.query.limit;
     try{
-        const products = await manager.getProducts();
-        if (limit) {
-            res.json(products.slice(0, limit));
-        } else {
-            res.json(products);
-        }
+        const products = await manager.getProducts(req, res);
+      
+        res.json(products);
+        
     }catch(error){
         res.status(result.statusCode).json(result.body);
     }

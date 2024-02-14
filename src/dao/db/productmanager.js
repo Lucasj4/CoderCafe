@@ -29,9 +29,9 @@ export default class ProductManager {
                 price,
                 code,
                 stock,
-                status: true,  // Status es true por defecto
+                status: true,  
                 category,
-                thumbnails: thumbnails || []  // Si no se proporcionan thumbnails, se establece como un array vacío
+                thumbnails: thumbnails || []  
             };
     
             await ProductModel.createProduct(newProduct);
@@ -42,11 +42,17 @@ export default class ProductManager {
     }
     
 
-    async getProducts() {
+    async getProducts(req, res) {
         try {
-          
-            const products = await ProductModel.getProducts();
-            return products;
+            const limit = parseInt(req.query.limit) || 10;
+            const page = parseInt(req.query.page) || 1;
+            const query = req.query.query;
+            const filter = query && query.trim() !== '' ? JSON.parse(query) : {};
+            const sort = parseInt(req.query.sort) || null;
+            const products = await ProductModel.getProducts(limit, page, sort, filter);
+            console.log(filter, sort, limit);
+        
+            return { statusCode: 200, body: { message: 'Productos', product: products }};
         } catch (error) {
             console.error("Error al obtener productos:", error);
             return { statusCode: 500, body: { error: 'Error interno del servidor' } };
@@ -88,14 +94,14 @@ export default class ProductManager {
             const deleteProductResult = await ProductModel.deleteProduct(id);
     
             if (!deleteProductResult) {
-                // Si no se encontró el producto, se devuelve un objeto indicando el error
+                
                 return { success: false, statusCode: 404, message: "Producto no encontrado" };
             }
     
-            // Si el producto fue eliminado con éxito, se devuelve un objeto indicando el éxito
+        
             return { success: true, statusCode: 200, message: 'Producto eliminado con éxito' };
         } catch (error) {
-            // Manejar otros errores aquí
+            
             console.error("Error al eliminar producto:", error.message);
             return { success: false, statusCode: 500, error: "Error interno del servidor al eliminar el producto" };
         }

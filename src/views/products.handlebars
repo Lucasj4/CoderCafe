@@ -1,0 +1,27 @@
+<h1>Lista de Productos</h1>
+
+{{#each products}}
+
+  <h2>{{title}}</h2>
+  <p><strong>Descripción:</strong> {{description}}</p>
+  <p><strong>Precio:</strong> ${{price}}</p>
+  <p><strong>Código:</strong> {{code}}</p>
+  <p><strong>Stock:</strong> {{stock}}</p>
+  <p><strong>Categoría:</strong> {{category}}</p>
+
+  <h3>Thumbnails</h3>
+  <ul>
+    {{#each thumbnails}}
+      <li><img src="{{this}}" alt="Thumbnail {{@index}}" /></li>
+    {{/each}}
+  </ul>
+
+{{/each}}
+{{#if hasNextPage}}
+  <a href="http://localhost:8080/products?&page={{nextPage}}&limit={{limit}}"> Siguiente </a>
+{{/if}}
+{{#if hasPrevPage}}
+  <a href="http://localhost:8080/products?&page={{prevPage}}&limit={{limit}}"> Anterior </a>
+{{/if}}
+
+<p>Pagina {{currentPage}} de {{totalPages}} </p>

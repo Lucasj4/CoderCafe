@@ -5,7 +5,7 @@ const cartSchema = new mongoose.Schema({
         {
             product: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref:'Product',
+                ref:'products',
                 required: true
             },
             quantity: {
@@ -14,37 +14,43 @@ const cartSchema = new mongoose.Schema({
             }
         }
     ]
+});
+
+cartSchema.pre("findOne", function(next){
+    this.populate("products.product");
+    next();
 })
 
-export class CartModel {
-    
-    static CartModel
-    
-    static inizialite(){
-        this.CartModel = mongoose.model("carts", cartSchema)
+export default class CartModel {
+
+    constructor() {
+        this.CartModel = mongoose.model("carts", cartSchema);
     }
 
-    static async createCart(cart){
-        try{
+    async createCart(cart) {
+        try {
             const newCart = new this.CartModel(cart);
-            return await newCart.save()
-        }catch(error){
+            return await newCart.save();
+        } catch(error) {
             throw error;
         }
-        
     }
 
-    static async getCartById(id){
-        try{
+    async getCartById(id) {
+        try {
             const cart = await this.CartModel.findById(id);
             return cart;
-        }catch(error){
+        } catch(error) {
             throw error;
         }
     }
 
-    
+    async updateCart(cartId, cart){
+        try{
+            const newCart = this.CartModel.findByIdAndUpdate(cartId, cart);
+            return newCart;
+        }catch{
+            throw error;
+        }
+    }
 }
-
-CartModel.inizialite();
-

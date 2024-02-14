@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const productSchema = new mongoose.Schema({
     title: {
@@ -38,6 +39,8 @@ const productSchema = new mongoose.Schema({
     },
 })
 
+productSchema.plugin(mongoosePaginate);
+
 export class ProductModel {
 
     static ProductModel;
@@ -45,6 +48,8 @@ export class ProductModel {
 
     static initialize(){
         this.ProductModel = mongoose.model("products", productSchema)
+
+
     }
 
     static async createProduct(data){
@@ -65,14 +70,22 @@ export class ProductModel {
         }
     } 
 
-    static async getProducts(){
-        try{
-            const products = await this.ProductModel.find();
+    static async getProducts(limit, page, sort, filter){
+        try {
+            let options = { limit, page };
+            
+            // Si se proporciona un valor para sort, ordenar por precio
+            if (sort) {
+                options.sort = { price: sort };
+            }
+    
+            const products = await this.ProductModel.paginate(filter, options);
             return products;
-        }catch(error){
+        } catch (error) {
             throw error;
         }
     }
+    
 
     static async getProductById(id){
         try{

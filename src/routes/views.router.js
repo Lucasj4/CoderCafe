@@ -4,7 +4,7 @@ export const productsRouter = express.Router();
 export const viewsRouter = express.Router();
 import CartManager from "../dao/db/cartmanager.js";
 import ProductManager from "../dao/db/productmanager.js"; 
-import { rest } from "underscore";
+
 
 const manager = new ProductManager();
 const CartManagerInstance = new CartManager();
@@ -25,7 +25,9 @@ viewsRouter.get('/products', async (req, res)=>{
       totalPages: productsData.body.product.totalPages,
       limit: req.query.limit || 10, // Usa el límite actual o el predeterminado
       query: req.query.query, // Mantén otros parámetros de consulta
-      sort: req.query.sort});
+      sort: req.query.sort,
+      user: req.session.user
+   });
    }catch(error){
     console.error("Error al obtener productos:", error);
     res.status(500).json("Error interno del servidor");
@@ -56,4 +58,19 @@ viewsRouter.get('/carts/:cid', async (req, res) => {
        res.status(500).json({ message: 'Error interno del servidor' });
    }
 });
+
+viewsRouter.get("/register", (req, res)=>{
+   if (req.session.login) {
+      return res.redirect("/products");
+  }
+  res.render("register");
+  
+})
+
+viewsRouter.get("/", (req, res)=>{
+   if (req.session.login) {
+      return res.redirect("/products");
+  }
+   res.render("login")
+})
 

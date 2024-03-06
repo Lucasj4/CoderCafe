@@ -13,6 +13,8 @@ import path from 'path';
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import passport from "passport";
+import { initializePassport } from "./config/passport.config.js";
 
 const app = express();
 const PORT = 8080;
@@ -32,12 +34,13 @@ app.use(session({
   resave: true, 
   saveUninitialized:true,
   store: MongoStore.create({
-
     mongoUrl: "mongodb+srv://lucasfjulia:Lebronjames23@cluster0.k62q89m.mongodb.net/ecommerce?retryWrites=true&w=majority",
-    ttl:100,
+    
   })
 
 }))
+
+initializePassport();
 const hbs = exphbs.create({
   defaultLayout: "main",
   runtimeOptions: {
@@ -49,8 +52,8 @@ app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
 
-
-
+app.use(passport.initialize());
+app.use(passport.session());
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
 app.use("/", viewsRouter);

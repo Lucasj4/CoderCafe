@@ -63,6 +63,8 @@ sessionRouter.post('/login', passport.authenticate('login', {failureRedirect: 'a
     res.redirect("/products");
 })
 
+
+
 sessionRouter.get('/faillogin', async(req,res)=>{
     console.log("Fallo la estrategia");
     res.send({error: "fallo login"});

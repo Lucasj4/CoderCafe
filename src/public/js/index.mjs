@@ -57,6 +57,28 @@ const agregarProducto = () => {
    
 };
 
+const formulario = document.getElementById("loginForm");
 
+formulario.addEventListener("submit", (event) => {
+    event.preventDefault(); 
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    let obj = {email, password};
+
+    fetch("/login", {
+        method: "POST",
+        body: JSON.stringify(obj),
+        headers: {
+            "Content-Type": "application/json", 
+            "Authorization" : `Bearer ${localStorage.getItem("authToken")}`
+        }
+    })
+        // .then(result => result.json())
+        // .then(json => {
+        //     localStorage.setItem("authToken", json.token);
+        // })
+})
 
 

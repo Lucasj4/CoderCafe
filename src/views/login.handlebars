@@ -1,5 +1,5 @@
 <h1>Login</h1>
-<form action="/api/sessions/login" method="POST">
+<form action="/api/users/login" method="POST" id="loginForm">
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
     <br>
@@ -10,3 +10,4 @@
     <a href="http://localhost:8080/register" class="register">Register</a>
 <a href="/api/sessions/github" class="github-button"> Github </a>
 </form>
+<script type="module" src="../public/js/index.mjs"></script>

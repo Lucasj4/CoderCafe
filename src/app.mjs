@@ -59,6 +59,8 @@ app.use("/api/products", productsRouter);
 app.use("/", viewsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/sessions", sessionRouter);
+initializePassport();
+
 
 app.get('*.mjs', (req, res, next) => {
   res.type('application/javascript');

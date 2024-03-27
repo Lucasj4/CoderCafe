@@ -1,46 +1,47 @@
-import { ProductModel } from "../models/productmodel.js";
+import { ProductService } from "../services/productservice.js";
 
+const productService = new ProductService();
 
-export default class ProductManager {
+export default class ProductController {
 
-    async addProduct(product) {
-        const { title, description, price, code, stock, category, thumbnails } = product;
-    
+    async addProduct(req, res) {
+        const { title, description, price, code, stock, category, thumbnails } = req.body;
+
         try {
             if (!title || !description || !price || !code || !stock || !category) {
                 const missingParameter = !title ? 'title' :
-                                         !description ? 'description' :
-                                         !price ? 'price' :
-                                         !code ? 'code' :
-                                         !stock ? 'stock' :
-                                         !category ? 'category' : null;
-                return { statusCode: 400, body: { error: `Falta el parámetro '${missingParameter}' en la solicitud` } };
+                    !description ? 'description' :
+                    !price ? 'price' :
+                    !code ? 'code' :
+                    !stock ? 'stock' :
+                     !category ? 'category' : null;
+                res.status(400).json({ error: `Falta el parámetro '${missingParameter}' en la solicitud` });
             }
-    
-            const existProduct = await ProductModel.findProductByCode(code);
-    
+
+            const existProduct = await productService.findProductByCode(code);
+
             if (existProduct) {
-                return { statusCode: 409, body: { error: "Ya existe un producto con el mismo código" } };
+                res.status(409).json({ error: "Ya existe un producto con el mismo código" });
             }
-    
+
             const newProduct = {
                 title,
                 description,
                 price,
                 code,
                 stock,
-                status: true,  
+                status: true,
                 category,
-                thumbnails: thumbnails || []  
+                thumbnails: thumbnails || []
             };
-    
-            await ProductModel.createProduct(newProduct);
-            return { statusCode: 201, body: { message: 'Producto agregado con éxito', product: newProduct }};
+
+            await productService.createProduct(newProduct);
+            res.status(201).json({ message: "Producto agregado con éxito", product: newProduct });
         } catch (error) {
-            return { statusCode: 500, body: { error: 'Error interno del servidor' } };
+            res.status(500).json({ error: 'Error interno del servidor' });
         }
     }
-    
+
 
     async getProducts(req, res) {
         try {
@@ -49,65 +50,64 @@ export default class ProductManager {
             const query = req.query.query;
             const filter = query && query.trim() !== '' ? JSON.parse(query) : {};
             const sort = parseInt(req.query.sort) || null;
-            const products = await ProductModel.getProducts(limit, page, sort, filter);
+            const products = await productService.getProducts(limit, page, sort, filter);
+
             console.log(filter, sort, limit);
-        
-            return { statusCode: 200, body: { message: 'Productos', product: products }};
+
+            res.status(200).json({ message: 'Productos', product: products });
         } catch (error) {
             console.error("Error al obtener productos:", error);
-            return { statusCode: 500, body: { error: 'Error interno del servidor' } };
+            res.status(500).json({ error: 'Error interno del servidor' });
         }
     }
 
-    async getProductById(productId) {
-        
+    async getProductById(req, res) {
+        const productId = req.params.productId;
+
         try {
-            const product = await ProductModel.getProductById(productId);
-
-            return product;
-
+            const product = await productService.getProductById(productId);
+            if (!product) {
+                res.status(404).json({ error: 'Producto no encontrado' });
+            }
+            res.status(200).json(product);
         } catch (error) {
-            throw error;
+            console.error("Error al obtener el producto por ID:", error);
+            res.status(500).json({ error: 'Error interno del servidor' });
         }
     }
 
+    async updateProduct(req, res) {
+        const productId = req.params.productId;
+        const productUpdated = req.body;
 
-
-
-    async updateProduct(productId, productUpdated) {
-
-       
         try {
-            await ProductModel.updateProduct(productId, productUpdated);  
-            return { statusCode: 200, body: { message: 'Producto actualizado con éxito', product: updatedProduct } };
-
+            await productService.updateProduct(productId, productUpdated);
+            res.status(200).json({ message: 'Producto actualizado con éxito', product: productUpdated });
         } catch (error) {
-            console.log("Error al actualizar el producto", error);
-            return {statusCode: 500, body: {message: 'Error interno del servidor'}}
+            console.error("Error al actualizar el producto:", error);
+            res.status(500).json({ message: 'Error interno del servidor' });
         }
-        
-       
     }
 
-    async deleteProduct(id) {
+    async deleteProduct(req, res) {
+        const id = req.params.pid;
+    
         try {
-            const deleteProductResult = await ProductModel.deleteProduct(id);
+            console.log("id", id);
+            const deleteProductResult = await productService.deleteProduct(id);
     
             if (!deleteProductResult) {
-                
-                return { success: false, statusCode: 404, message: "Producto no encontrado" };
+                return res.status(404).json({ success: false, message: "Producto no encontrado" });
             }
     
-        
-            return { success: true, statusCode: 200, message: 'Producto eliminado con éxito' };
+            res.status(200).json({ success: true, message: 'Producto eliminado con éxito' });
         } catch (error) {
-            
             console.error("Error al eliminar producto:", error.message);
-            return { success: false, statusCode: 500, error: "Error interno del servidor al eliminar el producto" };
+            res.status(500).json({ success: false, error: "Error interno del servidor al eliminar el producto" });
         }
     }
-    
-
 }
 
-export { ProductManager };
+export { ProductController };
+
+

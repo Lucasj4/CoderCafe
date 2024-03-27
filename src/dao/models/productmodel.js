@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import mongoosePaginate from 'mongoose-paginate-v2';
 
+// Definir el esquema del producto
 const productSchema = new mongoose.Schema({
     title: {
         type: String, 
@@ -37,89 +38,15 @@ const productSchema = new mongoose.Schema({
     thumbnails: {
         type: [String], 
     },
-})
+});
 
+// Aplicar el plugin de paginación a nuestro esquema
 productSchema.plugin(mongoosePaginate);
 
-export class ProductModel {
+// Definir el modelo de producto
+const ProductModel = mongoose.model("products", productSchema);
 
-    static ProductModel;
-
-
-    static initialize(){
-        this.ProductModel = mongoose.model("products", productSchema)
+// Exportar el modelo de producto
+export default ProductModel;
 
 
-    }
-
-    static async createProduct(data){
-        try{
-            const newProduct = new this.ProductModel(data);
-            return await newProduct.save();
-        }catch(error){
-            throw error
-        }
-    }
-
-    static async findProductByCode(productCode){
-        try{
-            const product = await this.ProductModel.findOne({code: productCode})
-            return product;
-        }catch(error){
-            throw error;
-        }
-    } 
-
-    static async getProducts(limit, page, sort, filter){
-        try {
-            let options = { limit, page };
-            
-            // Si se proporciona un valor para sort, ordenar por precio
-            if (sort) {
-                options.sort = { price: sort };
-            }
-    
-            const products = await this.ProductModel.paginate(filter, options);
-            return products;
-        } catch (error) {
-            throw error;
-        }
-    }
-    
-
-    static async getProductById(id){
-        try{
-            const product = await this.ProductModel.findById(id);
-            return product;
-        }catch(error){
-            throw error;
-        }
-    }
-
-    static async updateProduct(id, updateProduct){
-        try{
-            const update = await this.ProductModel.findByIdAndUpdate(id, updateProduct);
-            
-            return update;
-        }catch(error){
-            throw error;
-        }
-    }
-
-    static async deleteProduct(id){
-        try{
-
-            const deleteProduct = await this.ProductModel.findByIdAndDelete(id);
-
-            return deleteProduct;
-
-        }catch(error){
-            throw error;
-        }
-    }
-
-    
-
-}
-
-ProductModel.initialize();

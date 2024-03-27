@@ -1,39 +1,19 @@
 import express from "express";
-import CartManager from "../dao/db/cartmanager.js";
-
+import CartController from "../dao/db/cartmanager.js";
 
 export const cartsRouter = express.Router();
-const manager = new CartManager()
+const cartController = new CartController();
 
+cartsRouter.get('/:cid', cartController.getCartById);
 
+cartsRouter.delete('/:cid/products/:pid',cartController.deleteProductToCart); 
 
+cartsRouter.delete('/:cid', cartController.deleteAllProductsFromCart);
 
+cartsRouter.post('/', cartController.addCart);
 
-cartsRouter.get('/:cid', async (req, res) => {
-    await manager.getCartById(req, res);
-});
+cartsRouter.post('/:cid/product/:pid', cartController.addProductToCart)
 
-cartsRouter.delete('/:cid/products/:pid', async(req, res) => {
-    await manager.deleteProductToCart(req, res);
-}); 
-cartsRouter.delete('/:cid', async (req, res)=> {
-    await manager.deleteAllProductsFromCart(req, res);
-});
-cartsRouter.post('/', async (req, res) => {
-    await manager.addCart(req, res);
-});
+cartsRouter.put('/:cid',cartController.updateCart);
 
-cartsRouter.post('/:cid/product/:pid', async (req, res) => {
-    await manager.addProductToCart(req,res);
-})
-
-
-cartsRouter.put('/:cid', async (req, res) => {
-    await manager.updateCart(req, res);
-});
-
-cartsRouter.put('/:cid/products/:pid', async (req, res) => {
-    await manager.updateProductQuantity(req, res);
-});
-
-
+cartsRouter.put('/:cid/products/:pid',cartController.updateProductQuantity);

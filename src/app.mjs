@@ -5,7 +5,7 @@ import exphbs from 'express-handlebars';
 import { cartsRouter } from "./routes/carts.router.js";
 import { productsRouter } from "./routes/products.router.js";
 import { viewsRouter } from "./routes/views.router.js";
-import { ProductManager } from './dao/db/productmanager.js'
+import { ProductController } from './dao/db/productmanager.js'
 import { MessageModel } from './dao/models/messagemodel.js'
 import { userRouter } from "./routes/user.router.js";
 import { sessionRouter } from "./routes/session.router.js";
@@ -17,10 +17,10 @@ import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 
 const app = express();
-const PORT = 8080;
-const httpServer = app.listen(PORT, () => {
-  console.log(`Servidor en ejecución en http://localhost:${PORT}`);
-});
+// const PORT = 8080;
+// const httpServer = app.listen(PORT, () => {
+//   console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+// });
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
@@ -68,54 +68,54 @@ app.get('*.mjs', (req, res, next) => {
 });
 
 
-const productManager = new ProductManager();
-const io = socketIo(httpServer);
+// const productManager = new ProductController();
+// const io = socketIo(httpServer);
 
-io.on("connection", async (socket) => {
-  console.log("Un cliente se conectó");
-
-
-  socket.emit('connected', 'Conexión exitosa');
+// io.on("connection", async (socket) => {
+//   console.log("Un cliente se conectó");
 
 
-  socket.emit('updateProducts', await productManager.getProducts());
-
-  socket.on("Addproduct", async (product) => {
-    console.log('Recibido evento "Addproduct" en el servidor');
-    console.log('Producto recibido en el servidor:', product);
-
-    try {
-      await productManager.addProduct(product);
-      console.log('Producto agregado exitosamente');
-      io.sockets.emit("updateProducts", await productManager.getProducts());
-    } catch (error) {
-      console.error("Error al agregar producto:", error);
-    }
-  });
-
-  socket.on("DeleteProduct", async (id) => {
-    try {
-      await productManager.deleteProduct(id);
-      io.sockets.emit("updateProducts", await productManager.getProducts());
-
-    } catch (error) {
-      console.error("Error al eliminar producto:", error);
-    }
-  })
+//   socket.emit('connected', 'Conexión exitosa');
 
 
-  socket.on("message", async data => {
-    try {
-        await MessageModel.create(data);
-        const messages = await MessageModel.find();
-        io.sockets.emit("message", messages);
-    } catch (error) {
-        console.error("Error al guardar o recuperar mensajes:", error);
-    }
-});
+//   socket.emit('updateProducts', await productManager.getProducts());
+
+//   socket.on("Addproduct", async (product) => {
+//     console.log('Recibido evento "Addproduct" en el servidor');
+//     console.log('Producto recibido en el servidor:', product);
+
+//     try {
+//       await productManager.addProduct(product);
+//       console.log('Producto agregado exitosamente');
+//       io.sockets.emit("updateProducts", await productManager.getProducts());
+//     } catch (error) {
+//       console.error("Error al agregar producto:", error);
+//     }
+//   });
+
+//   socket.on("DeleteProduct", async (id) => {
+//     try {
+//       await productManager.deleteProduct(id);
+//       io.sockets.emit("updateProducts", await productManager.getProducts());
+
+//     } catch (error) {
+//       console.error("Error al eliminar producto:", error);
+//     }
+//   })
 
 
-});
+//   socket.on("message", async data => {
+//     try {
+//         await MessageModel.create(data);
+//         const messages = await MessageModel.find();
+//         io.sockets.emit("message", messages);
+//     } catch (error) {
+//         console.error("Error al guardar o recuperar mensajes:", error);
+//     }
+// });
 
 
-export { io };
+// });
+
+
+// export { io };

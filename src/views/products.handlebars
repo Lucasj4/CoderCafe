@@ -4,7 +4,7 @@
     <p>Bienvenido, {{user.first_name}} {{user.last_name}}</p>
     <p>Edad: {{user.age}}</p>
     <p>Email: {{user.email}}</p>
-    <a href="/api/sessions/logout">Logout</a>
+    <a href="/api/users/logout">Logout</a>
   </div>
 {{else}}
   <p>No hay usuario definido.</p>
@@ -18,7 +18,9 @@
   <p><strong>Código:</strong> {{code}}</p>
   <p><strong>Stock:</strong> {{stock}}</p>
   <p><strong>Categoría:</strong> {{category}}</p>
-
+ <form action="/api/carts/{{../cartId}}/product/{{id}}" method="POST">
+                    <button class="btnMios" type="submit">Agregar al Carrito</button>
+  </form>
   <h3>Thumbnails</h3>
   <ul>
     {{#each thumbnails}}

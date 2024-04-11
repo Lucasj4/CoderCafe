@@ -198,39 +198,22 @@ export default class CartController {
             res.status(500).json("Error interno del servidor");
         }
     }
+    
+   
 
     async addProductToCart(req, res) {
+        const cartId = req.params.cid;
         const productId = req.params.pid;
         const quantity = req.body.quantity || 1;
-
+        
         try {
-            const cartId = req.params.cid;
-            const cart = await cartService.getCartById(cartId);
-
-            if (!cart) {
-                res.status(404).json({ message: 'Carrito no encontrado' });
-                return;
-            }
-
-            const productExist = cart.products.find(item => item.product.toString() === productId);
-            
-            if (productExist) {
-
-                productExist.quantity += quantity;
-            } else {
-
-                cart.products.push({ product: productId, quantity });
-            }
-
-            cart.markModified("products");
-
-
-            await cart.save();
-
-            res.status(200).json({ cart: cart });
+            await cartService.AddProduct(cartId, productId, quantity);
+            console.log(req.user);
+            const carritoID = (req.user.cart).toString();
+            res.redirect(`/carts/${carritoID}`)
         } catch (error) {
-            console.log(`Error: ${error}`);
-            res.status(500).json({ error: "Error interno del servidor" });
+            console.log(" error: ", error);
+            res.status(500).send("Error de agregar producto");
         }
     }
 
@@ -238,6 +221,7 @@ export default class CartController {
         const cartId = req.params.cid;
 
         try {
+            console.log(cart);
             const cart = await cartService.getCartById(cartId); // 
 
             if (!cart) {

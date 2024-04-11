@@ -52,9 +52,7 @@ export default class ProductController {
             const sort = parseInt(req.query.sort) || null;
             const products = await productService.getProducts(limit, page, sort, filter);
 
-            console.log(filter, sort, limit);
-
-            res.status(200).json({ message: 'Productos', product: products });
+            res.json(products)
         } catch (error) {
             console.error("Error al obtener productos:", error);
             res.status(500).json({ error: 'Error interno del servidor' });

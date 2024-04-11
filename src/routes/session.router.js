@@ -1,6 +1,5 @@
 import express from "express";
-import UserModel from "../dao/models/user.model.js";
-import { isValidPassword } from "../utils/hashBcrypt.js";
+
 import passport from "passport";
 export const sessionRouter = express.Router();
 
@@ -48,39 +47,39 @@ export const sessionRouter = express.Router();
 //     }
 // })
 
-sessionRouter.post('/login', passport.authenticate('login', {failureRedirect: 'api/sessions/faillogin'}), async(req, res)=>{
-    if(!req.user) return res.status(400).send({status: "error", message:"Credenciales Invalidas"});
+// sessionRouter.post('/login', passport.authenticate('login', {failureRedirect: 'api/sessions/faillogin'}), async(req, res)=>{
+//     if(!req.user) return res.status(400).send({status: "error", message:"Credenciales Invalidas"});
 
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        age: req.user.age,
-        email: req.user.email
-    };
+//     req.session.user = {
+//         first_name: req.user.first_name,
+//         last_name: req.user.last_name,
+//         age: req.user.age,
+//         email: req.user.email
+//     };
 
-    req.session.login = true;
+//     req.session.login = true;
 
-    res.redirect("/products");
-})
+//     res.redirect("/products");
+// })
 
 
 
-sessionRouter.get('/faillogin', async(req,res)=>{
-    console.log("Fallo la estrategia");
-    res.send({error: "fallo login"});
-})
-sessionRouter.get("/logout", (req, res) => {
-    if (req.session.login) {
-        req.session.destroy();
-    }
-    res.redirect("/");
-})
+// sessionRouter.get('/faillogin', async(req,res)=>{
+//     console.log("Fallo la estrategia");
+//     res.send({error: "fallo login"});
+// })
+// sessionRouter.get("/logout", (req, res) => {
+//     if (req.session.login) {
+//         req.session.destroy();
+//     }
+//     res.redirect("/");
+// })
 
-sessionRouter.get('/github', passport.authenticate('github', {scope: ['user:email']}), async (req, res)=> {
-})
+// sessionRouter.get('/github', passport.authenticate('github', {scope: ['user:email']}), async (req, res)=> {
+// })
 
-sessionRouter.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}), async (req,res)=> {
-    req.session.user = req.user;
-    req.session.login = true;
-    res.redirect('/products');
-})
+// sessionRouter.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}), async (req,res)=> {
+//     req.session.user = req.user;
+//     req.session.login = true;
+//     res.redirect('/products');
+// })

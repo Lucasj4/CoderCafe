@@ -1,76 +1,23 @@
 import  express  from "express";
 export const productsRouter = express.Router();
-
+import {ViewController}  from "../controllers/viewscontroller.js";
 export const viewsRouter = express.Router();
-import CartManager from "../dao/db/cartmanager.js";
-import ProductManager from "../dao/db/productmanager.js"; 
+import CartController from "../controllers/cartmanager.js";
+import ProductController from "../controllers/productmanager.js"; 
+import {checkUserRole} from '../middleware/checkrole.js'
+import passport from "passport";
+const viewController = new ViewController();
 
+const CartManagerInstance  = new CartController();
+const manager = new ProductController();
 
-const manager = new ProductManager();
-const CartManagerInstance = new CartManager();
-viewsRouter.get('/products', async (req, res)=>{
-   try{
-    const productsData = await manager.getProducts(req, res);
-   
-    const products = productsData.body.product.docs.map(product => {
-      const {_id, ...rest} = product.toObject();
-      return rest;
-    })
-    res.render('products', {  products: products,
-      hasPrevPage: productsData.body.product.hasPrevPage,
-      hasNextPage: productsData.body.product.hasNextPage,
-      prevPage: productsData.body.product.prevPage, 
-      nextPage: productsData.body.product.nextPage,
-      currentPage: productsData.body.product.page,
-      totalPages: productsData.body.product.totalPages,
-      limit: req.query.limit || 10, // Usa el límite actual o el predeterminado
-      query: req.query.query, // Mantén otros parámetros de consulta
-      sort: req.query.sort,
-      user: req.session.user
-   });
-   }catch(error){
-    console.error("Error al obtener productos:", error);
-    res.status(500).json("Error interno del servidor");
-   }
-   
-    
-})
+viewsRouter.get("/products",checkUserRole(['User']),passport.authenticate('jwt', { session: false }), viewController.renderProducts);
 
-viewsRouter.get('/realtimeproducts', async (req, res) => {
-   
-   res.render('realTimeProducts');
-});
+viewsRouter.get('/realtimeproducts',viewController.renderRealTimeProducts);
 
-viewsRouter.get('/carts/:cid', async (req, res) => {
-   try {
+viewsRouter.get('/carts/:cid', viewController.renderCart);
 
-       const result = await CartManagerInstance.getCartById(req, res);
+viewsRouter.get("/register", viewController.renderRegister);
 
-       if (!result.renderView) {
-           
-           return result.data;
-       }
-
-
-       res.render('carts', result.data);
-   } catch (error) {
-       console.error('Error al obtener el carrito:', error);
-       res.status(500).json({ message: 'Error interno del servidor' });
-   }
-});
-
-viewsRouter.get("/register", (req, res)=>{
-   if (req.session.login) {
-      return res.redirect("/products");
-  }
-  res.render("register");
-  
-})
-
-viewsRouter.get("/", (req, res)=>{
-   if (req.session.login) {
-      return res.redirect("/products");
-  }
-   res.render("login")
-})
+viewsRouter.get("/", viewController.renderLogin);
 

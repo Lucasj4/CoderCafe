@@ -5,8 +5,6 @@ import exphbs from 'express-handlebars';
 import { cartsRouter } from "./routes/carts.router.js";
 import { productsRouter } from "./routes/products.router.js";
 import { viewsRouter } from "./routes/views.router.js";
-import { ProductController } from './dao/db/productmanager.js'
-import { MessageModel } from './dao/models/messagemodel.js'
 import { userRouter } from "./routes/user.router.js";
 import { sessionRouter } from "./routes/session.router.js";
 import path from 'path';
@@ -17,10 +15,11 @@ import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 
 const app = express();
-// const PORT = 8080;
-// const httpServer = app.listen(PORT, () => {
-//   console.log(`Servidor en ejecución en http://localhost:${PORT}`);
-// });
+ 
+const PORT = 8080;
+const httpServer = app.listen(PORT, () => {
+  console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+});
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
@@ -54,6 +53,7 @@ app.set("views", "./src/views");
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
 app.use("/", viewsRouter);

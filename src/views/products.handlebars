@@ -1,14 +1,5 @@
 <h1>Lista de Productos</h1>
-  {{#if user}}
-  <div>
-    <p>Bienvenido, {{user.first_name}} {{user.last_name}}</p>
-    <p>Edad: {{user.age}}</p>
-    <p>Email: {{user.email}}</p>
-    <a href="/api/users/logout">Logout</a>
-  </div>
-{{else}}
-  <p>No hay usuario definido.</p>
-{{/if}}
+
 
 {{#each products}}
 

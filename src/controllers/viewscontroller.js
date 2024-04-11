@@ -22,7 +22,7 @@ export class ViewController{
             const hasNextPage = page < totalPages;
            
             const cartId = req.user.user.cart;
-            console.log(cartId);
+           
 
             const newArray = products.map(producto => {
                 const { _id, ...rest } = producto.toObject();
@@ -83,7 +83,7 @@ export class ViewController{
        
         try {
             const cart = await cartService.getProductsFromCart(cartId);
-            console.log(cart);
+            
             if (!cart) {
                 console.log("No existe ese carrito con el id");
                 return res.status(404).json({ error: "Carrito no encontrado" });

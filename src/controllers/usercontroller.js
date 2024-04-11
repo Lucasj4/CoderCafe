@@ -2,6 +2,7 @@ import CartModel from "../models/cartmodel.js";
 import jwt from 'jsonwebtoken';
 import { createHash, isValidPassword } from "../utils/hashBcrypt.js";
 import { UserService } from "../services/userservice.js";
+import UserDTO from "../dto/user.dto.js";
 
 const userService = new UserService();
 
@@ -53,7 +54,7 @@ export class UserController {
         const { email, password } = req.body;
         try {
             const existingUser = await userService.getUserByEmail( email );
-            console.log(existingUser);
+            
             if (!existingUser){
                 return res.status(401).send("Usuario no válido");
             }
@@ -73,7 +74,7 @@ export class UserController {
                 httpOnly: true
             });
 
-            res.redirect("/products");
+            res.redirect("/api/users/profile");
         } catch (error) {
             console.error(error);
             res.status(500).send("Error interno del servidor");
@@ -81,15 +82,15 @@ export class UserController {
     }
 
     async profile(req, res) {
-        //Con DTO: 
-        const userDto = new UserDTO(req.user.first_name, req.user.last_name, req.user.role);
-        const isAdmin = req.user.role === 'admin';
+        const userDto = new UserDTO(req.user.user.first_name, req.user.user.last_name, req.user.user.rol);
+        const isAdmin = req.user.rol === 'admin';
+        console.log(userDto);
         res.render("profile", { user: userDto, isAdmin });
     }
     
     async logout(req, res) {
         res.clearCookie("coderCookieToken");
-        res.redirect("/login");
+        res.redirect("/");
     }
 
     async admin(req, res) {

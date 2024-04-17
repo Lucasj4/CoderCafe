@@ -13,6 +13,8 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
+import { generateMockProducts } from "./utils/productsmock.js";
+import errorHandler from "./middleware/error.js"; 
 
 const app = express();
  
@@ -59,6 +61,16 @@ app.use("/api/products", productsRouter);
 app.use("/", viewsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/sessions", sessionRouter);
+app.get('/mockingproducts' , (req, res)=> {
+  const products = [];
+
+  for (let index = 0; index < 100; index++) {
+      products.push(generateMockProducts());
+      
+  }
+  res.json(products)
+})
+app.use(errorHandler);
 initializePassport();
 
 

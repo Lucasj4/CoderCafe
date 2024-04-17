@@ -63,4 +63,18 @@ export class CartService {
         }
     }
 
+    async deleteProduct(cartId, productId){
+        try {
+            const cart = await CartModel.findById(cartId);
+            if (!cart) {
+                throw new Error('Carrito no encontrado');
+            }
+            cart.products = cart.products.filter(item => item.product._id.toString() !== productId);
+            await cart.save();
+            return cart;
+        } catch (error) {
+            throw new Error("Error");
+        }
+    }
+
 }

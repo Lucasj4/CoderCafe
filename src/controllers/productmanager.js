@@ -1,27 +1,39 @@
 import { ProductService } from "../services/productservice.js";
-
+import CustomError from "../services/errors/custom-error.js";
+import { generateProductErrorInfo } from "../services/errors/info.js";
+import { Errors } from "../services/errors/enums.js";
 const productService = new ProductService();
 
 export default class ProductController {
 
-    async addProduct(req, res) {
+    async addProduct(req, res, next) {
         const { title, description, price, code, stock, category, thumbnails } = req.body;
 
         try {
             if (!title || !description || !price || !code || !stock || !category) {
-                const missingParameter = !title ? 'title' :
-                    !description ? 'description' :
-                    !price ? 'price' :
-                    !code ? 'code' :
-                    !stock ? 'stock' :
-                     !category ? 'category' : null;
-                res.status(400).json({ error: `Falta el parámetro '${missingParameter}' en la solicitud` });
+                // // const missingParameter = !title ? 'title' :
+                // //     !description ? 'description' :
+                // //     !price ? 'price' :
+                // //     !code ? 'code' :
+                // //     !stock ? 'stock' :
+                // //     !category ? 'category' : null;
+                
+                // res.status(400).json({ error: `Falta el parámetro '${missingParameter}' en la solicitud` });
+                throw CustomError.createError(
+                    {
+                        name: "Producto nuevo",
+                        cause: generateProductErrorInfo({title, description, price, code, stock, category}),
+                        message: "Error al crear producto",
+                        code: Errors.MISSING_DATA_ERROR
+                    }
+                );
+               
             }
 
             const existProduct = await productService.findProductByCode(code);
 
             if (existProduct) {
-                res.status(409).json({ error: "Ya existe un producto con el mismo código" });
+                return res.status(409).json({ error: "Ya existe un producto con el mismo código" });
             }
 
             const newProduct = {
@@ -38,7 +50,8 @@ export default class ProductController {
             await productService.createProduct(newProduct);
             res.status(201).json({ message: "Producto agregado con éxito", product: newProduct });
         } catch (error) {
-            res.status(500).json({ error: 'Error interno del servidor' });
+            // res.status(500).json({ error: 'Error interno del servidor' });
+            next(error);
         }
     }
 
@@ -89,21 +102,23 @@ export default class ProductController {
 
     async deleteProduct(req, res) {
         const id = req.params.pid;
-    
+
         try {
             console.log("id", id);
             const deleteProductResult = await productService.deleteProduct(id);
-    
+
             if (!deleteProductResult) {
                 return res.status(404).json({ success: false, message: "Producto no encontrado" });
             }
-    
+
             res.status(200).json({ success: true, message: 'Producto eliminado con éxito' });
         } catch (error) {
             console.error("Error al eliminar producto:", error.message);
             res.status(500).json({ success: false, error: "Error interno del servidor al eliminar el producto" });
         }
     }
+
+
 }
 
 export { ProductController };

@@ -1,5 +1,11 @@
 import { CartService } from "../services/cartservice.js";
+import UserModel from '../models/user.model.js';
+import {ProductService} from '../services/productservice.js';
+import TicketModel from "../models/ticketmodel.js";
+import { generateUniqueCode, calculateTotal } from "../utils/cartutils.js";
+
 const cartService = new CartService();
+const productService = new ProductService();
 
 export default class CartController {
     // constructor() {
@@ -198,18 +204,18 @@ export default class CartController {
             res.status(500).json("Error interno del servidor");
         }
     }
-    
-   
+
+
 
     async addProductToCart(req, res) {
         const cartId = req.params.cid;
         const productId = req.params.pid;
         const quantity = req.body.quantity || 1;
-        
+
         try {
             await cartService.AddProduct(cartId, productId, quantity);
-            console.log(req.user);
-            const carritoID = (req.user.cart).toString();
+          
+            const carritoID = (req.user.user.cart).toString();
             res.redirect(`/carts/${carritoID}`)
         } catch (error) {
             console.log(" error: ", error);
@@ -320,34 +326,85 @@ export default class CartController {
         try {
             const cartId = req.params.cid;
             const productId = req.params.pid;
-            
+
             const cart = await cartService.getCartById(cartId);
-    
+
             if (!cart) {
                 return res.status(404).json({ message: 'Carrito no encontrado' });
             }
-    
+
             console.log("CART PRODUCTS", cart.products);
-    
+
             const productIndex = cart.products.findIndex(product => product.product._id.toString() === productId);
-    
+
             console.log("Products index", productIndex);
-    
+
             if (productIndex === -1) {
                 return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
             }
-    
+
             cart.products.splice(productIndex, 1);
-    
+
             await cartService.updateCart(cartId, cart);
-    
+
             return res.status(200).json({ message: 'Producto eliminado del carrito exitosamente' });
         } catch (error) {
             console.error('Error al eliminar el producto del carrito:', error);
             return res.status(500).json({ message: 'Error interno del servidor' });
         }
     }
-    
+
+    async finishPurchase(req, res) {
+        const cartId = req.params.cid;
+        try {
+            // Obtener el carrito y sus productos
+            const cart = await cartService.getProductsFromCart(cartId);
+            console.log("Cart: ", cart);
+            const products = cart.products;
+            console.log("Productos" ,products);
+            // Inicializar un arreglo para almacenar los productos no disponibles
+            const productsNotAvailable = [];
+
+            // Verificar el stock y actualizar los productos disponibles
+            for (const item of products) {
+                const productId = item.product;
+                const product = await productService.getProductById(productId);
+                if (product.stock >= item.quantity) {
+                    // Si hay suficiente stock, restar la cantidad del producto
+                    product.stock -= item.quantity;
+                    await product.save();
+                } else {
+                    // Si no hay suficiente stock, agregar el ID del producto al arreglo de no disponibles
+                    productsNotAvailable.push(productId);
+                }
+            }
+
+            const userWithCart = await UserModel.findOne({ cart: cartId });
+
+            // Crear un ticket con los datos de la compra
+            const ticket = new TicketModel({
+                code: generateUniqueCode(),
+                purchase_datetime: new Date(),
+                amount: calculateTotal(cart.products),
+                purchaser: userWithCart._id
+            });
+
+            console.log("Ticker", ticket);
+            await ticket.save();
+
+            // Eliminar del carrito los productos que sí se compraron
+            cart.products = cart.products.filter(item => productsNotAvailable.some(productId => productId.equals(item.product)));
+
+            // Guardar el carrito actualizado en la base de datos
+            await cart.save();
+
+            res.status(200).json({ productsNotAvailable });
+        } catch (error) {
+            console.error('Error al procesar la compra:', error);
+            res.status(500).json({ error: 'Error interno del servidor' });
+        }
+    }
+
 
 
 

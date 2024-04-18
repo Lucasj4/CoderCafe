@@ -21,7 +21,7 @@ export class ViewController{
             const hasPrevPage = page > 1;
             const hasNextPage = page < totalPages;
            
-            const cartId = req.user.user.cart;
+         
            
 
             const newArray = products.map(producto => {
@@ -29,8 +29,8 @@ export class ViewController{
                 return { id: _id, ...rest }; 
             });
 
-           
-     
+            const cartId = req.user.user.cart;
+            console.log("Cart id: ", cartId);
 
             res.render("products", {
                 products: newArray,
@@ -83,31 +83,38 @@ export class ViewController{
        
         try {
             const cart = await cartService.getProductsFromCart(cartId);
-            
+            console.log("Cart desde render: ", cart);
             if (!cart) {
                 console.log("No existe ese carrito con el id");
                 return res.status(404).json({ error: "Carrito no encontrado" });
             }
            
             let purchaseTotal = 0;
-    
+            let totalQuantity = 0;
+            
             const cartProducts = cart.products.map(item => {
                 const product = item.product.toObject();
                 const quantity = item.quantity || 1 ;
                 const totalPrice = product.price * quantity;
+
+                console.log("Cantidad: ", item.quantity);
                 
                 purchaseTotal += totalPrice;
-          
+                totalQuantity += quantity
+                
                 return {
                     product: { ...product, totalPrice },
                     quantity,
+                    totalPricePerProduct: totalPrice,
                     cartId
                 };
 
                
             });
+
             
-            res.render("carts", { products: cartProducts, purchaseTotal, cartId });
+            
+            res.render("carts", { products: cartProducts, purchaseTotal, cartId});
         } catch (error) {
             console.error("Error al obtener el carrito desde render", error);
             res.status(500).json({ error: "Error interno del servidor" });

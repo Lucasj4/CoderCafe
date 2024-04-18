@@ -18,16 +18,20 @@ export class UserController {
                 return res.status(409).send("El usuario ya existe");
             }
 
-        
-
+            const newCart = new CartModel();
+            await newCart.save();
+            console.log("nuevo cart", newCart);
             
             const newUser = await userService.register({
                 first_name,
                 last_name,
                 email,
-                password,
+                cart: newCart._id,
+                password: createHash(password),
                 age,
             });
+
+            await newUser.save();
 
            if(newUser){
             console.log("creado con exito");

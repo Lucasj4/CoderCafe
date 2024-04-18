@@ -15,6 +15,7 @@ import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 import { generateMockProducts } from "./utils/productsmock.js";
 import errorHandler from "./middleware/error.js"; 
+import { authMiddleware } from "./middleware/authmiddleware.js";
 
 const app = express();
  
@@ -71,6 +72,7 @@ app.get('/mockingproducts' , (req, res)=> {
   res.json(products)
 })
 app.use(errorHandler);
+app.use(authMiddleware);
 initializePassport();
 
 

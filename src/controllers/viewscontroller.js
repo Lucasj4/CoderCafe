@@ -30,7 +30,7 @@ export class ViewController{
             });
 
             const cartId = req.user.user.cart;
-            console.log("Cart id: ", cartId);
+            
 
             res.render("products", {
                 products: newArray,
@@ -45,7 +45,7 @@ export class ViewController{
             });
 
         } catch (error) {
-            console.error("Error al obtener productos", error);
+            req.logger.error("Error al obtener productos", error);
             res.status(500).json({
                 status: 'error',
                 error: "Error interno del servidor"
@@ -65,7 +65,7 @@ export class ViewController{
         try {
             res.render("realtimeproducts");
         } catch (error) {
-            console.log("error en la vista real time", error);
+            req.logger.error("error en la vista real time", error);
             res.status(500).json({ error: "Error interno del servidor" });
         }
     }
@@ -83,9 +83,9 @@ export class ViewController{
        
         try {
             const cart = await cartService.getProductsFromCart(cartId);
-            console.log("Cart desde render: ", cart);
+            
             if (!cart) {
-                console.log("No existe ese carrito con el id");
+                req.logger.warning;("No existe ese carrito con el id");
                 return res.status(404).json({ error: "Carrito no encontrado" });
             }
            
@@ -97,13 +97,13 @@ export class ViewController{
                 const quantity = item.quantity || 1 ;
                 const totalPrice = product.price * quantity;
 
-                console.log("Cantidad: ", item.quantity);
+             
                 
                 purchaseTotal += totalPrice;
                 totalQuantity += quantity
                 
                 return {
-                    product: { ...product, totalPrice },
+                    product: { ...product},
                     quantity,
                     totalPricePerProduct: totalPrice,
                     cartId
@@ -116,7 +116,7 @@ export class ViewController{
             
             res.render("carts", { products: cartProducts, purchaseTotal, cartId});
         } catch (error) {
-            console.error("Error al obtener el carrito desde render", error);
+            req.logger.error("Error al obtener el carrito desde render", error);
             res.status(500).json({ error: "Error interno del servidor" });
         }
     }

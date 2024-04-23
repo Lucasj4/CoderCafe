@@ -20,7 +20,7 @@ export class UserController {
 
             const newCart = new CartModel();
             await newCart.save();
-            console.log("nuevo cart", newCart);
+            
             
             const newUser = await userService.register({
                 first_name,
@@ -34,7 +34,7 @@ export class UserController {
             await newUser.save();
 
            if(newUser){
-            console.log("creado con exito");
+            req.logger.info("Usuario creado con exito");
            }
 
             const token = jwt.sign({ user: newUser }, "coderhouse", {
@@ -49,7 +49,7 @@ export class UserController {
             res.redirect("/products");
 
         } catch (error) {
-            console.log(error);
+            req.logger.error(error);
             res.status(500).send("Ha ocurrido un error interno del servidor.");
         }
     }
@@ -80,7 +80,7 @@ export class UserController {
 
             res.redirect("/api/users/profile");
         } catch (error) {
-            console.error(error);
+            req.logger.error(error);
             res.status(500).send("Error interno del servidor");
         }
     }
@@ -88,7 +88,7 @@ export class UserController {
     async profile(req, res) {
         const userDto = new UserDTO(req.user.user.first_name, req.user.user.last_name, req.user.user.rol);
         const isAdmin = req.user.rol === 'admin';
-        console.log(userDto);
+      
         res.render("profile", { user: userDto, isAdmin });
     }
     

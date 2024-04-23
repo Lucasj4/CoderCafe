@@ -67,7 +67,7 @@ export default class ProductController {
 
             res.json(products)
         } catch (error) {
-            console.error("Error al obtener productos:", error);
+            req.logger.error("Error al obtener productos:", error);
             res.status(500).json({ error: 'Error interno del servidor' });
         }
     }
@@ -78,11 +78,11 @@ export default class ProductController {
         try {
             const product = await productService.getProductById(productId);
             if (!product) {
-                res.status(404).json({ error: 'Producto no encontrado' });
+                return res.status(404).json({ error: 'Producto no encontrado' });
             }
             res.status(200).json(product);
         } catch (error) {
-            console.error("Error al obtener el producto por ID:", error);
+            req.logger.error("Error al obtener el producto por ID:", error);
             res.status(500).json({ error: 'Error interno del servidor' });
         }
     }
@@ -95,7 +95,7 @@ export default class ProductController {
             await productService.updateProduct(productId, productUpdated);
             res.status(200).json({ message: 'Producto actualizado con éxito', product: productUpdated });
         } catch (error) {
-            console.error("Error al actualizar el producto:", error);
+            req.logger.error("Error al actualizar el producto:", error);
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     }
@@ -104,7 +104,6 @@ export default class ProductController {
         const id = req.params.pid;
 
         try {
-            console.log("id", id);
             const deleteProductResult = await productService.deleteProduct(id);
 
             if (!deleteProductResult) {
@@ -113,7 +112,7 @@ export default class ProductController {
 
             res.status(200).json({ success: true, message: 'Producto eliminado con éxito' });
         } catch (error) {
-            console.error("Error al eliminar producto:", error.message);
+            req.logger.error("Error al eliminar producto:", error.message);
             res.status(500).json({ success: false, error: "Error interno del servidor al eliminar el producto" });
         }
     }

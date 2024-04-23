@@ -16,11 +16,15 @@ import { initializePassport } from "./config/passport.config.js";
 import { generateMockProducts } from "./utils/productsmock.js";
 import errorHandler from "./middleware/error.js"; 
 import { authMiddleware } from "./middleware/authmiddleware.js";
+import { addLogger } from "./utils/logger.js";
+import { configObject } from "./config/config.js";
 
 const app = express();
+app.use(addLogger);
+
  
 const PORT = 8080;
-const httpServer = app.listen(PORT, () => {
+const httpServer = app.listen(PORT, (req, res) => {
   console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
 const __filename = new URL(import.meta.url).pathname;
@@ -42,7 +46,6 @@ app.use(session({
 
 }))
 
-initializePassport();
 const hbs = exphbs.create({
   defaultLayout: "main",
   runtimeOptions: {
@@ -53,15 +56,26 @@ const hbs = exphbs.create({
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
-
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
 app.use("/", viewsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/sessions", sessionRouter);
+app.use(errorHandler);
+app.use(authMiddleware);
+initializePassport();
+
+
+app.get("/loggertest", (req, res) => {
+  req.logger.error("Error fatal");
+  req.logger.debug("Mensaje de debug");
+  req.logger.info("Mensaje de Info");
+  req.logger.warning("Mensaje de Warning");
+
+  res.send("Test de logs");
+})
 app.get('/mockingproducts' , (req, res)=> {
   const products = [];
 
@@ -71,9 +85,6 @@ app.get('/mockingproducts' , (req, res)=> {
   }
   res.json(products)
 })
-app.use(errorHandler);
-app.use(authMiddleware);
-initializePassport();
 
 
 app.get('*.mjs', (req, res, next) => {

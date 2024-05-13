@@ -1,6 +1,6 @@
 import express from "express";
 import './database.js'
-import socketIo from 'socket.io';
+// import socketIo from 'socket.io';
 import exphbs from 'express-handlebars';
 import { cartsRouter } from "./routes/carts.router.js";
 import { productsRouter } from "./routes/products.router.js";
@@ -14,15 +14,15 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 import { generateMockProducts } from "./utils/productsmock.js";
-import errorHandler from "./middleware/error.js"; 
+import errorHandler from "./middleware/error.js";
 import { authMiddleware } from "./middleware/authmiddleware.js";
 import { addLogger } from "./utils/logger.js";
-import { configObject } from "./config/config.js";
+
 
 const app = express();
 app.use(addLogger);
 
- 
+
 const PORT = 8080;
 const httpServer = app.listen(PORT, (req, res) => {
   console.log(`Servidor en ejecución en http://localhost:${PORT}`);
@@ -35,13 +35,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
 app.use(cookieParser())
-app.use(session({ 
-  secret:"secretCoder",
-  resave: true, 
-  saveUninitialized:true,
+app.use(session({
+  secret: "secretCoder",
+  resave: true,
+  saveUninitialized: true,
   store: MongoStore.create({
     mongoUrl: "mongodb+srv://lucasfjulia:Lebronjames23@cluster0.k62q89m.mongodb.net/ecommerce?retryWrites=true&w=majority",
-    
+
   })
 
 }))
@@ -76,12 +76,12 @@ app.get("/loggertest", (req, res) => {
 
   res.send("Test de logs");
 })
-app.get('/mockingproducts' , (req, res)=> {
+app.get('/mockingproducts', (req, res) => {
   const products = [];
 
   for (let index = 0; index < 100; index++) {
-      products.push(generateMockProducts());
-      
+    products.push(generateMockProducts());
+
   }
   res.json(products)
 })

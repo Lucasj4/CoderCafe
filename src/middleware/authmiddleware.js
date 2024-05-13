@@ -8,7 +8,8 @@ export function authMiddleware(req, res, next) {
         if (!user) {
             req.user = null;
         } else {
-            req.user = user;
+            req.user = user.user;
+           
         }
         next();
     })(req, res, next);

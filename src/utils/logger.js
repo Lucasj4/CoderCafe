@@ -51,12 +51,15 @@ const loggerProduction = winston.createLogger({
             level: "error"
         })
     ]
+
 })
 
-const logger = node_env === "produccion" ? loggerProduction : loggerDevelopment;
+const logger = node_env === "desarrollo" ? loggerDevelopment : loggerProduction;
 
-//Middleware
+
+
 export const addLogger = (req, res, next) => {
+   // Agrega este console.log para verificar si el middleware se está ejecutando
     req.logger = logger;
     req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleDateString()}`);
     next();

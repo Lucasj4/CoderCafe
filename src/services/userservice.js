@@ -26,7 +26,7 @@ export class UserService{
                 last_name,
                 email,
                 cart: newCart._id,
-                password: createHash(password),
+                password,
                 age
             });
 

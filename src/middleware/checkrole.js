@@ -11,7 +11,7 @@ export const checkUserRole = (allowedRoles) => (req, res, next) => {
             } else {
                 const userRole = decoded.user.rol;
                 const user = decoded.user;
-                console.log(user);
+                req.logger.info("Rol usuario: " + user.rol);
                 
                 if (allowedRoles.includes(userRole)) {
                     next();

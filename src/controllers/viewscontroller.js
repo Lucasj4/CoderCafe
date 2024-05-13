@@ -1,12 +1,12 @@
 import ProductModel from "../models/productmodel.js";
 import { CartService } from "../services/cartservice.js";
-const cartService= new CartService();
+const cartService = new CartService();
 
-export class ViewController{
+export class ViewController {
     async renderProducts(req, res) {
         try {
             const { page = 1, limit = 3 } = req.query;
-           
+
             const skip = (page - 1) * limit;
 
             const products = await ProductModel
@@ -20,17 +20,17 @@ export class ViewController{
 
             const hasPrevPage = page > 1;
             const hasNextPage = page < totalPages;
-           
-         
-           
+
+
+
 
             const newArray = products.map(producto => {
                 const { _id, ...rest } = producto.toObject();
-                return { id: _id, ...rest }; 
+                return { id: _id, ...rest };
             });
 
             const cartId = req.user.user.cart;
-            
+
 
             res.render("products", {
                 products: newArray,
@@ -41,7 +41,7 @@ export class ViewController{
                 currentPage: parseInt(page),
                 totalPages,
                 cartId,
-               
+
             });
 
         } catch (error) {
@@ -53,7 +53,7 @@ export class ViewController{
         }
     }
 
-    async renderLogin(req, res){
+    async renderLogin(req, res) {
         res.render("login");
     }
 
@@ -80,44 +80,74 @@ export class ViewController{
 
     async renderCart(req, res) {
         const cartId = req.params.cid;
-       
+
         try {
             const cart = await cartService.getProductsFromCart(cartId);
-            
+
             if (!cart) {
-                req.logger.warning;("No existe ese carrito con el id");
+                req.logger.warning; ("No existe ese carrito con el id");
                 return res.status(404).json({ error: "Carrito no encontrado" });
             }
-           
+
             let purchaseTotal = 0;
             let totalQuantity = 0;
-            
+
             const cartProducts = cart.products.map(item => {
                 const product = item.product.toObject();
-                const quantity = item.quantity || 1 ;
+                const quantity = item.quantity || 1;
                 const totalPrice = product.price * quantity;
 
-             
-                
+
+
                 purchaseTotal += totalPrice;
                 totalQuantity += quantity
-                
+
                 return {
-                    product: { ...product},
+                    product: { ...product },
                     quantity,
                     totalPricePerProduct: totalPrice,
                     cartId
                 };
 
-               
+
             });
 
-            
-            
-            res.render("carts", { products: cartProducts, purchaseTotal, cartId});
+
+
+            res.render("carts", { products: cartProducts, purchaseTotal, cartId });
         } catch (error) {
             req.logger.error("Error al obtener el carrito desde render", error);
             res.status(500).json({ error: "Error interno del servidor" });
         }
+    }
+
+    async renderProfile(req, res) {
+        const userData = req.user;
+        res.render('profile', { user: userData });
+    }
+
+    async renderChat(req, res) {
+        res.render("chat");
+    }
+
+    async renderHome(req, res) {
+        res.render("home"); 
+    }
+
+    //Tercer integradora: 
+    async renderResetPassword(req, res) {
+        res.render("passwordreset");
+    }
+
+    async renderChangePassword(req, res) {
+        res.render("passwordcambio");
+    }
+
+    async renderConfirmation(req, res) {
+        res.render("confirmacion-envio");
+    }
+
+    async renderPremium(req, res) {
+        res.render("panel-premium");
     }
 }

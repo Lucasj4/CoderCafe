@@ -12,52 +12,13 @@ const userController = new UserController();
 
 userRouter.post("/register", userController.register);
 userRouter.post("/login", userController.login);
-userRouter.post("/logout", userController.logout);
+userRouter.get("/logout", userController.logout.bind(userController));
 userRouter.get("/admin", passport.authenticate("jwt", { session: false }), userController.admin);
 userRouter.get("/profile", passport.authenticate("jwt", { session: false }), userController.profile);
+userRouter.post("/requestPasswordReset", userController.requestPasswordReset);
+userRouter.post("/reset-password", userController.resetPassword);
+userRouter.put("/premium/:uid", userController.changeRolPremium)
 
-
-// userRouter.post('/', async(req, res)=>{
-//     const {first_name, last_name, email, password, age, rol} = req.body; 
-
-
-//     try {
-//         const existingUser = await UserModel.findOne({ email: email });
-//         if (existingUser) {
-//             return res.status(400).send({ error: "El correo electrónico ya está registrado" });
-//         }
-//         const newUser = await UserModel.create({first_name, last_name, email, password:createHash(password), age, rol:"user"});
-
-//         req.session.login = true;
-
-//         req.session.user = { ...newUser._doc };
-
-//         res.status(200).send({message: "Usuario creado con éxito"});
-
-//     } catch (error) {
-//         console.log(error)
-//         res.status(400).send({error: "Error al crear el usuario"});
-//     }
-// })
-
-// userRouter.post("/", passport.authenticate("register", {
-//     failureRedirect: "/register"
-// }), async (req, res) => {
-//     if (!req.user) return res.status(400).send({ status: "error", message: "Credenciales invalidas" });
-
-//     req.session.user = {
-//         first_name: req.user.first_name,
-//         last_name: req.user.last_name,
-//         age: req.user.age,
-//         email: req.user.email,
-//         rol: req.user.rol
-//     };
-
-   
-//     req.session.login = true;
-
-//     res.redirect("/products");
-// })
 
 // userRouter.get("/failedregister", (req, res) => {
 //     res.send({ error: "Registro fallido" });

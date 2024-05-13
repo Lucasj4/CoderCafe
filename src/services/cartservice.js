@@ -22,7 +22,7 @@ export class CartService {
 
     async updateCart(cartId, cart) {
         try {
-            const newCart = CartModel.findByIdAndUpdate(cartId, cart);
+            const newCart = await CartModel.findByIdAndUpdate(cartId, cart);
             return newCart;
         } catch {
             throw error;

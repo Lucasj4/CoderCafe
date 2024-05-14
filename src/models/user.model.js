@@ -33,8 +33,12 @@ const userSchema = new mongoose.Schema({
     },
     rol:{
         type: String,
-        enum: ['Admin', 'User'],
+        enum: ['Admin', 'User', 'Premium'],
         default: 'User'
+    },
+    resetToken: {
+        token: String,
+        expiresAt: Date
     }
 })
 

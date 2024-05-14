@@ -5,7 +5,9 @@ import { createHash, isValidPassword } from "../utils/hashBcrypt.js";
 import { UserService } from "../services/userservice.js";
 import UserDTO from "../dto/user.dto.js";
 import { generateResetToken } from "../utils/tokenreset.js";
+import { EmailManager } from "./emailmanager.js";
 
+const emailController = new EmailManager();
 const userService = new UserService();
 
 export class UserController {
@@ -118,27 +120,28 @@ export class UserController {
 
         try {
             
-            const user = await userService.getUserByEmail({ email });
+            const user = await userService.getUserByEmail( email );
             if (!user) {
                 return res.status(404).send("Usuario no encontrado");
             }
 
-            // Generar un token 
             const token = generateResetToken();
 
-            // Guardar el token en el usuario
+
             user.resetToken = {
                 token: token,
                 expiresAt: new Date(Date.now() + 3600000) // 1 hora de duración
             };
-            await user.save();
 
-            // Enviar correo electrónico con el enlace de restablecimiento utilizando EmailService
-            await emailManager.enviarCorreoRestablecimiento(email, user.first_name, token);
+            req.logger.info("User resetTOken " + user.resetToken);
+            await user.save();
+     
+            await emailController.sendRestorationEmail(email, user.first_name, token);
 
             res.redirect("/confirmacion-envio");
         } catch (error) {
-            console.error(error);
+            req.logger.error(error);
+            console.log(error);
             res.status(500).send("Error interno del servidor");
         }
     }
@@ -148,13 +151,17 @@ export class UserController {
 
         try {
             // Buscar al usuario por su correo electrónico
-            const user = await UserModel.findOne({ email });
+            const user = await userService.getUserByEmail(email)
+
             if (!user) {
                 return res.render("passwordcambio", { error: "Usuario no encontrado" });
             }
 
             // Obtener el token de restablecimiento de la contraseña del usuario
+            req.logger.info("User" + user);
             const resetToken = user.resetToken;
+            req.logger.info("Reset token" + resetToken);
+            req.logger.info("Token: " + token);
             if (!resetToken || resetToken.token !== token) {
                 return res.render("passwordreset", { error: "El token de restablecimiento de contraseña es inválido" });
             }
@@ -177,7 +184,7 @@ export class UserController {
             await user.save();
 
             // Renderizar la vista de confirmación de cambio de contraseña
-            return res.redirect("/login");
+            return res.redirect("/");
         } catch (error) {
             console.error(error);
             return res.status(500).render("passwordreset", { error: "Error interno del servidor" });

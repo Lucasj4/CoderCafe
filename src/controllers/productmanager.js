@@ -9,6 +9,7 @@ export default class ProductController {
     async addProduct(req, res, next) {
         const { title, description, price, code, stock, category, thumbnails } = req.body;
         const roleUser = req.user.rol
+        const emailUser = req.user.email
         if(roleUser === "User"){
             res.status(403).send('Acceso denegado. No tienes permiso para acceder a esta página.');
             res.redirect("/products")
@@ -50,7 +51,7 @@ export default class ProductController {
                 stock,
                 category,
                 thumbnails: thumbnails || [],
-                owner 
+                owner
             };
     
 

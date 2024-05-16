@@ -13,7 +13,31 @@ export class UserService{
         }
     }
 
+    async getUserById(id) {
+        try {
+            const user = await UserModel.findById(id);
+            return user;
+        } catch (error) {  
+            throw new Error(error);
+        }
+    }
+
+    async updateUserRoleById(userId, newRole)  {
+        try {
+         
+            const updatedUser = await UserModel.findByIdAndUpdate(userId, { rol: newRole }, { new: true });
+            
+            if (!updatedUser) {
+                throw new Error('Usuario no encontrado');
+            }
     
+         
+            return updatedUser;
+        } catch (error) {
+            throw new Error('Error al actualizar el rol del usuario: ' + error.message);
+        }
+    }
+
     async register(data){
         const { first_name, last_name, email, password, age } = data;
         try {

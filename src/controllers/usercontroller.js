@@ -85,7 +85,7 @@ export class UserController {
                 httpOnly: true
             });
 
-            res.redirect("/products");
+            res.redirect("/profile");
         } catch (error) {
             req.logger.error(error);
             res.status(500).send("Error interno del servidor");
@@ -96,7 +96,7 @@ export class UserController {
 
     async profile(req, res) {
         const userDto = new UserDTO(req.user.user.first_name, req.user.user.last_name, req.user.user.rol);
-        const isAdmin = req.user.rol === 'admin';
+        const isAdmin = req.user.rol === 'Admin' || "Premium";
 
         res.render("profile", { user: userDto, isAdmin });
     }
@@ -195,15 +195,17 @@ export class UserController {
         try {
             const { uid } = req.params;
     
-            const user = await UserModel.findById(uid);
+            const user = await userService.getUserById(uid);
+            req.logger.info("User: " + user);
     
             if (!user) {
                 return res.status(404).json({ message: 'Usuario no encontrado' });
             }
+            req.logger.info("User rol: " + user.rol);
+            const newRol = user.rol === 'User' ? 'Premium' : 'User';
     
-            const nuevoRol = user.role === 'usuario' ? 'premium' : 'usuario';
-    
-            const actualizado = await UserModel.findByIdAndUpdate(uid, { role: nuevoRol }, { new: true });
+            const actualizado = await userService.updateUserRoleById(uid,newRol);
+            req.logger.info("User actualizado: " + user);
             res.json(actualizado);
         } catch (error) {
             console.error(error);

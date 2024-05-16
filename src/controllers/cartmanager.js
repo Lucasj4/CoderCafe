@@ -26,13 +26,26 @@ export default class CartController {
         const cartId = req.params.cid;
         const productId = req.params.pid;
         const quantity = req.body.quantity || 1;
-
+        const emailUser = req.user.email;
+        const ownerProduct = req.body.owner
+        req.logger.info("Email user: " + emailUser)
+        if(emailUser === ownerProduct ){
+            res.status(403).send("No puedes agregar un producto que te pertenece a tu carrito como usuario premium.");
+            res.redirect("/products");
+        }
         try {
-            await cartService.AddProduct(cartId, productId, quantity);
+           
+            if(emailUser !== ownerProduct ){
+                await cartService.AddProduct(cartId, productId, quantity);
 
             const carritoID = (req.user.cart).toString();
 
             res.redirect(`/carts/${carritoID}`)
+            }else {
+                
+                return res.redirect("/products");
+            }
+            
         } catch (error) {
             req.logger.error("Error al agregar producto: " + error);
             res.status(500).send("Error de agregar producto");

@@ -12,7 +12,7 @@ import { authMiddleware } from "../middleware/authmiddleware.js";
 const CartManagerInstance  = new CartController();
 const manager = new ProductController();
 
-viewsRouter.use(authMiddleware);
+
 
 viewsRouter.get("/products",checkUserRole(['User']),passport.authenticate('jwt', { session: false }), viewController.renderProducts);
 
@@ -33,4 +33,6 @@ viewsRouter.get("/password", viewController.renderChangePassword);
 viewsRouter.get("/confirmacion-envio", viewController.renderConfirmation );
 
 viewsRouter.get("/panel-premium", viewController.renderPremium);
+
+viewsRouter.get("/agregarproducto", authMiddleware, checkUserRole(['Premium','Admin']),viewController.renderAddProduct);
 

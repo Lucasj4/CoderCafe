@@ -12,7 +12,7 @@ productsRouter.get('/', productController.getProducts)
 
 productsRouter.get('/:pid', productController.getProductById);
 
-productsRouter.post('/', checkUserRole(["Admin", "Premium"]), passport.authenticate('jwt', { session: false }),productController.addProduct);
+productsRouter.post('/addproduct', checkUserRole(["Admin", "Premium"]), passport.authenticate('jwt', { session: false }),productController.addProduct);
 
 productsRouter.put('/:pid', productController.updateProduct);
 

@@ -9,10 +9,7 @@ export const checkUserRole = (allowedRoles) => (req, res, next) => {
             if (err) {
                 res.status(403).send('Acceso denegado. Token inválido.');
             } else {
-                const userRole = decoded.user.rol;
-                const user = decoded.user;
-                req.logger.info("Rol usuario: " + user.rol);
-                
+                const userRole = decoded.user.rol;     
                 if (allowedRoles.includes(userRole)) {
                     next();
                 } else {

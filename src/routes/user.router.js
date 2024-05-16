@@ -12,7 +12,7 @@ const userController = new UserController();
 
 userRouter.post("/register", userController.register);
 userRouter.post("/login", userController.login);
-userRouter.get("/logout", userController.logout.bind(userController));
+userRouter.post("/logout", userController.logout.bind(userController));
 userRouter.get("/admin", passport.authenticate("jwt", { session: false }), userController.admin);
 userRouter.get("/profile", passport.authenticate("jwt", { session: false }), userController.profile);
 userRouter.post("/requestPasswordReset", userController.requestPasswordReset);

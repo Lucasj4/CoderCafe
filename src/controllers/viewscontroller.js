@@ -123,7 +123,9 @@ export class ViewController {
 
     async renderProfile(req, res) {
         const userData = req.user;
-        res.render('profile', { user: userData });
+        const isPremium= req.user.rol === "Premium"
+     
+        res.render('profile', { user: userData, isPremium});
     }
 
     async renderChat(req, res) {
@@ -149,5 +151,8 @@ export class ViewController {
 
     async renderPremium(req, res) {
         res.render("panel-premium");
+    }
+    async renderAddProduct(req, res){
+        res.render("agregarproducto")
     }
 }

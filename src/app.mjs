@@ -45,7 +45,6 @@ app.use(session({
   })
 
 }))
-
 const hbs = exphbs.create({
   defaultLayout: "main",
   runtimeOptions: {
@@ -53,9 +52,12 @@ const hbs = exphbs.create({
     allowProtoMethodsByDefault: true,
   },
 });
+
+app.use(authMiddleware);
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/carts", cartsRouter);
@@ -64,7 +66,7 @@ app.use("/", viewsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/sessions", sessionRouter);
 app.use(errorHandler);
-app.use(authMiddleware);
+
 initializePassport();
 
 

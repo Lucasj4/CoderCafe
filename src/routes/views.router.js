@@ -36,3 +36,5 @@ viewsRouter.get("/panel-premium", viewController.renderPremium);
 
 viewsRouter.get("/agregarproducto", authMiddleware, checkUserRole(['Premium','Admin']),viewController.renderAddProduct);
 
+
+

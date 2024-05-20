@@ -1,9 +1,17 @@
-<div class="form">
-    <h1>Checkout</h1>
-    <p>¡Gracias por tu compra <span>{{client}}</span>! El número de orden es: <span> {{numTicket}} </span> </p>
-    <p> Te enviaremos un e-mail a <span> {{email}} </span> con toda la información de tu orden </p>
-     <div class="grupo-btn">
-        <a class="btnMios noSub" href="/products">Tienda</a>
-        <a class="btnMios noSub" href="/api/users/profile">Mi Perfil</a>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">Checkout</h1>
+                    <p>¡Gracias por tu compra <span>{{client}}</span>! El número de orden es: <span>{{numTicket}}</span></p>
+                    <p>Te enviaremos un e-mail a <span>{{email}}</span> con toda la información de tu orden</p>
+                    <div class="d-grid gap-2">
+                        <a href="/products" class="btn btn-primary btn-lg">Tienda</a>
+                        <a href="/api/users/profile" class="btn btn-secondary btn-lg">Mi Perfil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

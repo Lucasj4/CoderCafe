@@ -28,10 +28,10 @@ export default class CartController {
         const quantity = req.body.quantity || 1;
         const emailUser = req.user.email;
         const ownerProduct = req.body.owner
-        req.logger.info("Email user: " + emailUser)
+        
+       
         if(emailUser === ownerProduct ){
             res.status(403).send("No puedes agregar un producto que te pertenece a tu carrito como usuario premium.");
-            res.redirect("/products");
         }
         try {
            
@@ -39,8 +39,9 @@ export default class CartController {
                 await cartService.AddProduct(cartId, productId, quantity);
 
             const carritoID = (req.user.cart).toString();
-
-            res.redirect(`/carts/${carritoID}`)
+                
+            console.log("DESDE EXITO AGREGAR PRODUCTO");
+             return res.redirect(`/carts/${carritoID}`)
             }else {
                 
                 return res.redirect("/products");
@@ -63,7 +64,11 @@ export default class CartController {
                 return { renderView: false, data: res.status(404).json({ message: 'Carrito no encontrado' }) };
             }
 
-            return { renderView: true, data: { cart: cart } };
+            return res.status(200).json({ 
+                message: "Cart retrieved successfully", 
+                renderView: true, 
+                data: { cart: cart } 
+            });
         } catch (error) {
             req.logger.error('Error al obtener el carrito:' + error);
             return { renderView: false, data: res.status(500).json({ message: 'Error interno del servidor' }) };
@@ -183,9 +188,12 @@ export default class CartController {
         try {
             // Obtener el carrito y sus productos
             const cart = await cartService.getProductsFromCart(cartId);
-            req.logger.info("Cart: " + cart);
+
+            if (!cart) {
+                return res.status(404).json({ message: 'Carrito no encontrado' });
+            }
+          
             const products = cart.products;
-            req.logger.info("Productos" + products);
           
             const productsNotAvailable = [];
 
@@ -212,7 +220,7 @@ export default class CartController {
                 purchaser: userWithCart._id
             });
 
-            req.logger.info("Ticker" + ticket);
+         
             await ticket.save();
 
             cart.products = cart.products.filter(item => productsNotAvailable.some(productId => productId.equals(item.product)));

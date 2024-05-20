@@ -17,7 +17,9 @@ import { generateMockProducts } from "./utils/productsmock.js";
 import errorHandler from "./middleware/error.js";
 import { authMiddleware } from "./middleware/authmiddleware.js";
 import { addLogger } from "./utils/logger.js";
-
+import flash from 'connect-flash'
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from "swagger-ui-express";
 
 const app = express();
 app.use(addLogger);
@@ -52,7 +54,7 @@ const hbs = exphbs.create({
     allowProtoMethodsByDefault: true,
   },
 });
-
+app.use(flash())
 app.use(authMiddleware);
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
@@ -67,6 +69,11 @@ app.use("/api/users", userRouter);
 app.use("/api/sessions", sessionRouter);
 app.use(errorHandler);
 
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success');
+  res.locals.error_msg = req.flash('error');
+  next();
+});
 initializePassport();
 
 
@@ -94,7 +101,19 @@ app.get('*.mjs', (req, res, next) => {
   next();
 });
 
+const swaggerOptions = {
+  definition: {
+      openapi: "3.0.1",
+      info: {
+          title: "Documentacion de la App CoderCafe",
+          description: "App dedicada a la venta de cafe"
+      }
+  },
+  apis: ["./src/docs/**/*.yaml"]
+}
 
+const specs = swaggerJSDoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 // const productManager = new ProductController();
 // const io = socketIo(httpServer);
 

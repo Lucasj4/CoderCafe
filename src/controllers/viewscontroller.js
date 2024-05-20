@@ -152,7 +152,11 @@ export class ViewController {
     async renderPremium(req, res) {
         res.render("panel-premium");
     }
+
     async renderAddProduct(req, res){
         res.render("agregarproducto")
     }
+
+
+
 }

@@ -104,7 +104,7 @@ export class UserController {
     async logout(req, res) {
 
         res.clearCookie("coderCookieToken");
-        req.logger.info("Logout con exito");
+        res.status(200).send("User logged out successfully");
         res.redirect("/");
     }
 
@@ -154,7 +154,7 @@ export class UserController {
             const user = await userService.getUserByEmail(email)
 
             if (!user) {
-                return res.render("passwordcambio", { error: "Usuario no encontrado" });
+                return res.status(404).render("passwordcambio", { error: "Usuario no encontrado" });
             }
 
             // Obtener el token de restablecimiento de la contraseña del usuario
@@ -206,7 +206,12 @@ export class UserController {
     
             const actualizado = await userService.updateUserRoleById(uid,newRol);
             req.logger.info("User actualizado: " + user);
-            res.json(actualizado);
+            const response = {
+                message: "User role changed successfully",
+                user: actualizado
+            };
+        
+            return res.status(200).json(response);
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Error interno del servidor' });

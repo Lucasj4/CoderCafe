@@ -1,0 +1,110 @@
+paths:
+  /products:
+    get:
+      summary: Render products view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Products view rendered successfully
+
+  /realtimeproducts:
+    get:
+      summary: Render realtime products view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Realtime products view rendered successfully
+
+  /carts/{cid}:
+    get:
+      summary: Render cart view
+      tags:
+        - Views
+      parameters:
+        - name: cid
+          in: path
+          description: ID of the cart to render
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cart view rendered successfully
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal server error
+
+  /register:
+    get:
+      summary: Render register view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Register view rendered successfully
+
+  /profile:
+    get:
+      summary: Render profile view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Profile view rendered successfully
+
+  /:
+    get:
+      summary: Render login view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Login view rendered successfully
+
+  /views/reset-password:
+    get:
+      summary: Render reset password view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Reset password view rendered successfully
+
+  /password:
+    get:
+      summary: Render change password view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Change password view rendered successfully
+
+  /confirmacion-envio:
+    get:
+      summary: Render confirmation view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Confirmation view rendered successfully
+
+  /panel-premium:
+    get:
+      summary: Render premium panel view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Premium panel view rendered successfully
+
+  /agregarproducto:
+    get:
+      summary: Render add product view
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Add product view rendered successfully

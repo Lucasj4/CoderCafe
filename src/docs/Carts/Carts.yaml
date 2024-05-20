@@ -1,0 +1,234 @@
+paths:
+  /api/carts:
+    post:
+      summary: Create a new cart
+      tags:
+        - Cart
+      responses:
+        '201':
+          description: Cart created successfully
+        '500':
+          description: Internal server error
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Add product to cart
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  example: 1
+                owner:
+                  type: string
+                  example: owner@example.com
+      responses:
+        '403':
+          description: Cannot add product to cart owned by premium user
+        '500':
+          description: Internal server error
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Finish purchase from cart
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal server error
+  /api/carts/{cid}:
+    get:
+      summary: Get cart by ID
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cart retrieved successfully
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete all products from cart
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: All products deleted from cart successfully
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal server error
+    put:
+      summary: Update cart
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product:
+                        type: string
+                        description: ID of the product
+                        example: 60c72b2f9b1d4f1f30c8f5b6
+                      quantity:
+                        type: integer
+                        example: 2
+      responses:
+        '200':
+          description: Cart updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Carrito actualizado exitosamente
+                  cart:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 60c72b2f9b1d4f1f30c8f5b6
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            product:
+                              type: string
+                              example: 60c72b2f9b1d4f1f30c8f5b6
+                            quantity:
+                              type: integer
+                              example: 2
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal server error
+  /api/carts/{cid}/products/{pid}:
+    delete:
+      summary: Delete product from cart
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product deleted from cart successfully
+        '404':
+          description: Cart or product not found
+        '500':
+          description: Internal server error
+
+    put:
+      summary: Update product quantity in cart
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  example: 2
+      responses:
+        '200':
+          description: Product quantity updated successfully
+        '404':
+          description: Cart or product not found
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              _id: 
+                type: ObjectId
+                description: MongoDB autogenerated id
+              product:
+                type: string
+                description: ID of the product
+              quantity:
+                type: integer
+                description: Quantity of the product in the cart
+      required:
+        - products

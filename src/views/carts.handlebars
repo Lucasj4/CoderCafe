@@ -59,7 +59,7 @@
         
         <div class="d-flex justify-content-between">
             <a href="/products" class="btn btn-success mb-3">Seguir comprando</a>
-            <form  id="changeRoleForm" action="/api/carts/{{cartId}}/purchase">
+            <form  method="post" action="/api/carts/{{cartId}}/purchase">
                 <button type="submit" class="btn btn-success">Finalizar Compra</button>
             </form>
         </div>

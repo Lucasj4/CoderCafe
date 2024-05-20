@@ -8,12 +8,14 @@ export default class ProductController {
 
     async addProduct(req, res, next) {
         const { title, description, price, code, stock, category, thumbnails } = req.body;
+        console.log("Req body: ", req.body);
         const roleUser = req.user.rol
         const emailUser = req.user.email
         if(roleUser === "User"){
             res.status(403).send('Acceso denegado. No tienes permiso para acceder a esta página.');
             res.redirect("/products")
         }
+        console.log("Desde add product");
         try {
             if (!title || !description || !price || !code || !stock || !category) {
                 // // const missingParameter = !title ? 'title' :
@@ -58,7 +60,7 @@ export default class ProductController {
             await productService.createProduct(newProduct);
             res.status(201).json({ message: "Producto agregado con éxito", product: newProduct });
         } catch (error) {
-            // res.status(500).json({ error: 'Error interno del servidor' });
+            console.log("ERROR" , error);
             next(error);
         }
     }

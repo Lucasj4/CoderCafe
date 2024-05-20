@@ -1,25 +1,21 @@
 <h1>Lista de Productos</h1>
 
-
 {{#each products}}
-
   <h2>{{title}}</h2>
   <p><strong>Descripción:</strong> {{description}}</p>
   <p><strong>Precio:</strong> ${{price}}</p>
   <p><strong>Código:</strong> {{code}}</p>
   <p><strong>Stock:</strong> {{stock}}</p>
   <p><strong>Categoría:</strong> {{category}}</p>
- <form action="/api/carts/{{../cartId}}/product/{{id}}" method="POST">
-                    <button class="btnMios" type="submit">Agregar al Carrito</button>
-  </form>
+  <button class="btnMios" onclick="addToCart('{{../cartId}}', '{{id}}')">Agregar al Carrito</button>
   <h3>Thumbnails</h3>
   <ul>
     {{#each thumbnails}}
       <li><img src="{{this}}" alt="Thumbnail {{@index}}" /></li>
     {{/each}}
   </ul>
-
 {{/each}}
+
 {{#if hasNextPage}}
   <a href="http://localhost:8080/products?&page={{nextPage}}&limit={{limit}}"> Siguiente </a>
 {{/if}}
@@ -27,4 +23,50 @@
   <a href="http://localhost:8080/products?&page={{prevPage}}&limit={{limit}}"> Anterior </a>
 {{/if}}
 
-<p>Pagina {{currentPage}} de {{totalPages}} </p>
+<p>Página {{currentPage}} de {{totalPages}} </p>
+
+<script>
+function addToCart(cartId, productId) {
+    const actionUrl = `http://localhost:8080/api/carts/${cartId}/product/${productId}`;
+    fetch(actionUrl, {
+        method: 'POST',
+        // No incluir un cuerpo en la solicitud
+    })
+   
+    .then(response => {
+    console.log("Response desde aca: ", response);
+    if (response.status===200) {
+      
+       showSuccessAlert("Producto agregado con éxito");
+       setTimeout(() => {
+        window.location.href = `/carts/${cartId}`;
+    }, 1500)
+    } else {
+        throw new Error('Error al agregar producto');
+    }
+    })
+    .catch(error => {
+         throw new Error(error)
+        showErrorAlert('Ocurrió un error al agregar el producto al carrito.');
+    });
+}
+
+function showSuccessAlert(message) {
+    swal({
+        title: "¡Producto agregado al carrito!",
+        text: message,
+        icon: "success",
+       
+    });
+}
+
+// Función para mostrar una alerta de error
+function showErrorAlert(message) {
+    swal({
+        title: "Error",
+        text: message,
+        icon: "error",
+        button: "Aceptar",
+    });
+}
+</script>

@@ -6,44 +6,42 @@ export class ViewController {
     async renderProducts(req, res) {
         try {
             const { page = 1, limit = 3 } = req.query;
-
+    
             const skip = (page - 1) * limit;
-
+    
             const products = await ProductModel
                 .find()
                 .skip(skip)
-                .limit(limit);
-
+                .limit(parseInt(limit));
+    
             const totalProducts = await ProductModel.countDocuments();
-
+    
             const totalPages = Math.ceil(totalProducts / limit);
-
+    
             const hasPrevPage = page > 1;
             const hasNextPage = page < totalPages;
-
-
-
-
+    
             const newArray = products.map(producto => {
                 const { _id, ...rest } = producto.toObject();
                 return { id: _id, ...rest };
             });
 
-            const cartId = req.user.user.cart;
-
-
+        
+            const cartId = req.user.cart 
+          
+    
             res.render("products", {
                 products: newArray,
                 hasPrevPage,
                 hasNextPage,
-                prevPage: page > 1 ? parseInt(page) - 1 : null,
-                nextPage: page < totalPages ? parseInt(page) + 1 : null,
+                prevPage: hasPrevPage ? parseInt(page) - 1 : null,
+                nextPage: hasNextPage ? parseInt(page) + 1 : null,
                 currentPage: parseInt(page),
                 totalPages,
                 cartId,
-
+                limit: parseInt(limit) // Pasar el límite para la construcción de URL en la plantilla
             });
-
+    
         } catch (error) {
             req.logger.error("Error al obtener productos", error);
             res.status(500).json({

@@ -4,6 +4,7 @@ import {ProductService} from '../services/productservice.js';
 import TicketModel from "../models/ticketmodel.js";
 import { generateUniqueCode, calculateTotal } from "../utils/cartutils.js";
 import { EmailManager } from "./emailmanager.js";
+import e from "connect-flash";
 
 const emailManager = new EmailManager();
 const cartService = new CartService();
@@ -27,31 +28,30 @@ export default class CartController {
         const productId = req.params.pid;
         const quantity = req.body.quantity || 1;
         const emailUser = req.user.email;
-        const ownerProduct = req.body.owner
-        
-       
-        if(emailUser === ownerProduct ){
-            res.status(403).send("No puedes agregar un producto que te pertenece a tu carrito como usuario premium.");
-        }
+        const ownerProduct = req.body.owner;
+    
         try {
-           
-            if(emailUser !== ownerProduct ){
+            const product = await productService.getProductById(productId);
+    
+            if (emailUser === product.owner) {
+                return res.status(403).send("No puedes agregar un producto que te pertenece a tu carrito como usuario premium.");
+            }
+    
+            if (emailUser !== ownerProduct) {
                 await cartService.AddProduct(cartId, productId, quantity);
-
-            const carritoID = (req.user.cart).toString();
+    
+                const carritoID = (req.user.cart).toString();
                 
-            console.log("DESDE EXITO AGREGAR PRODUCTO");
-             return res.redirect(`/carts/${carritoID}`)
-            }else {
-                
+                return res.redirect(`/carts/${carritoID}`);
+            } else {
                 return res.redirect("/products");
             }
-            
         } catch (error) {
             req.logger.error("Error al agregar producto: " + error);
-            res.status(500).send("Error de agregar producto");
+            return res.status(500).send("Error de agregar producto");
         }
     }
+    
 
     async getCartById(req, res) {
         const cartId = req.params.cid;

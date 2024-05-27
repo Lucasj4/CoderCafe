@@ -5,12 +5,12 @@ export function authMiddleware(req, res, next) {
         if (err) {
             return next(err);
         }
-        if (!user) {
-            req.user = null;
-        } else {
-            req.user = user.user;
-           
-        }
+       
+        res.locals.isAuthenticated = !!user;
+        
+        req.user = user.user || null;
+     
+        
         next();
     })(req, res, next);
 }

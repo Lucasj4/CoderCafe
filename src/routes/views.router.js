@@ -14,9 +14,9 @@ const manager = new ProductController();
 
 
 
-viewsRouter.get("/products",checkUserRole(['User']),passport.authenticate('jwt', { session: false }), viewController.renderProducts);
+viewsRouter.get("/products", viewController.renderProducts);
 
-viewsRouter.get('/realtimeproducts',checkUserRole(['User']),passport.authenticate('jwt', { session: false }),viewController.renderRealTimeProducts);
+viewsRouter.get('/realtimeproducts',checkUserRole(['User']),viewController.renderRealTimeProducts);
 
 viewsRouter.get('/carts/:cid', viewController.renderCart);
 
@@ -34,7 +34,7 @@ viewsRouter.get("/confirmacion-envio", viewController.renderConfirmation );
 
 viewsRouter.get("/panel-premium", viewController.renderPremium);
 
-viewsRouter.get("/agregarproducto", authMiddleware, checkUserRole(['Premium','Admin']),viewController.renderAddProduct);
+viewsRouter.get("/agregarproducto", checkUserRole(['Premium','Admin']),viewController.renderAddProduct);
 
 
 

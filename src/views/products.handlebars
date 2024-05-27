@@ -7,7 +7,9 @@
   <p><strong>Código:</strong> {{code}}</p>
   <p><strong>Stock:</strong> {{stock}}</p>
   <p><strong>Categoría:</strong> {{category}}</p>
-  <button class="btnMios" onclick="addToCart('{{../cartId}}', '{{id}}')">Agregar al Carrito</button>
+  <form action="/api/carts/{{../cartId}}/product/{{id}}" method="POST">
+    <button class="btnMios" type="submit">Agregar al Carrito</button>
+  </form>
   <h3>Thumbnails</h3>
   <ul>
     {{#each thumbnails}}
@@ -25,48 +27,4 @@
 
 <p>Página {{currentPage}} de {{totalPages}} </p>
 
-<script>
-function addToCart(cartId, productId) {
-    const actionUrl = `http://localhost:8080/api/carts/${cartId}/product/${productId}`;
-    fetch(actionUrl, {
-        method: 'POST',
-        // No incluir un cuerpo en la solicitud
-    })
-   
-    .then(response => {
-    console.log("Response desde aca: ", response);
-    if (response.status===200) {
-      
-       showSuccessAlert("Producto agregado con éxito");
-       setTimeout(() => {
-        window.location.href = `/carts/${cartId}`;
-    }, 1500)
-    } else {
-        throw new Error('Error al agregar producto');
-    }
-    })
-    .catch(error => {
-         throw new Error(error)
-        showErrorAlert('Ocurrió un error al agregar el producto al carrito.');
-    });
-}
 
-function showSuccessAlert(message) {
-    swal({
-        title: "¡Producto agregado al carrito!",
-        text: message,
-        icon: "success",
-       
-    });
-}
-
-// Función para mostrar una alerta de error
-function showErrorAlert(message) {
-    swal({
-        title: "Error",
-        text: message,
-        icon: "error",
-        button: "Aceptar",
-    });
-}
-</script>

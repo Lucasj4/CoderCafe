@@ -55,11 +55,11 @@ const hbs = exphbs.create({
   },
 });
 app.use(flash())
-app.use(authMiddleware);
+
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
-
+app.use(authMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/carts", cartsRouter);

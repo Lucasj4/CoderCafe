@@ -5,15 +5,19 @@
   "main": "app.mjs",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/app.mjs --mode desarrollo",
-    "start": "nodemon src/app.mjs --mode produccion"
+    "start": "nodemon src/app.mjs --mode produccion",
+    "test": "mocha test/user.test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "chai": "^5.1.1",
+    "mocha": "^10.4.0",
+    "nodemon": "^3.0.2",
+    "sinon": "^18.0.0",
+    "supertest": "^7.0.0"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",

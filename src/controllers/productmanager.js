@@ -7,34 +7,24 @@ const productService = new ProductService();
 export default class ProductController {
 
     async addProduct(req, res, next) {
-        const { title, description, price, code, stock, category, thumbnails } = req.body;
-        console.log("Req body: ", req.body);
-        const roleUser = req.user.rol
-        const emailUser = req.user.email
-        if(roleUser === "User"){
-            res.status(403).send('Acceso denegado. No tienes permiso para acceder a esta página.');
-            res.redirect("/products")
+        const { title, description, price, code, stock, category, thumbnails, status } = req.body;
+
+        const roleUser = req.user.user.rol;
+
+
+        if (roleUser === "User") {
+            return res.status(403).send('Acceso denegado. No tienes permiso para acceder a esta página.');
         }
-        console.log("Desde add product");
         try {
-            if (!title || !description || !price || !code || !stock || !category) {
-                // // const missingParameter = !title ? 'title' :
-                // //     !description ? 'description' :
-                // //     !price ? 'price' :
-                // //     !code ? 'code' :
-                // //     !stock ? 'stock' :
-                // //     !category ? 'category' : null;
+            if (!title || !description || !price || !code || !stock || !category || status === undefined) {
+                const error = new CustomError({
+                    name: "Producto nuevo",
+                    cause: generateProductErrorInfo({ title, description, price, code, stock, category, status }),
+                    message: "Error al crear producto",
+                    code: Errors.MISSING_DATA_ERROR
+                });
                 
-                // res.status(400).json({ error: `Falta el parámetro '${missingParameter}' en la solicitud` });
-                throw CustomError.createError(
-                    {
-                        name: "Producto nuevo",
-                        cause: generateProductErrorInfo({title, description, price, code, stock, category}),
-                        message: "Error al crear producto",
-                        code: Errors.MISSING_DATA_ERROR
-                    }
-                );
-               
+                throw error;
             }
 
             const existProduct = await productService.findProductByCode(code);
@@ -43,7 +33,8 @@ export default class ProductController {
                 return res.status(409).json({ error: "Ya existe un producto con el mismo código" });
             }
 
-            const owner = req.user.role === 'Premium' ? req.user.email : 'Admin';
+            req.logger.info("Rol de usuario: " + roleUser)
+            const owner = roleUser === 'Premium' ? req.user.user.email : 'Admin';
 
             const newProduct = {
                 title,
@@ -52,23 +43,32 @@ export default class ProductController {
                 code,
                 stock,
                 category,
+                status,
                 thumbnails: thumbnails || [],
                 owner
             };
-    
 
             await productService.createProduct(newProduct);
             res.status(201).json({ message: "Producto agregado con éxito", product: newProduct });
         } catch (error) {
-            console.log("ERROR" , error);
+            
+            if (!(error instanceof CustomError)) {
+                error = new CustomError({
+                    message: error.message,
+                    code: error.code || Errors.INTERNAL_SERVER_ERROR
+                });
+            }
+           
             next(error);
+
         }
     }
 
 
+
     async getProducts(req, res) {
         try {
-            const limit = parseInt(req.query.limit) || 10;
+            const limit = parseInt(req.query.limit) || 5;
             const page = parseInt(req.query.page) || 1;
             const query = req.query.query;
             const filter = query && query.trim() !== '' ? JSON.parse(query) : {};
@@ -100,16 +100,16 @@ export default class ProductController {
     async updateProduct(req, res) {
         const productId = req.params.productId;
         const productUpdated = req.body;
-        const userRole = req.user.rol; 
-    
+        const userRole = req.user.rol;
+
         try {
             const product = await productService.getProductById(productId);
             if (!product) {
                 return res.status(404).json({ success: false, message: "Producto no encontrado" });
             }
-    
+
             // Verificar si el usuario es administrador o propietario del producto
-            if (userRole === 'Admin' || (userRole === 'Premium' && product.owner.equals(req.user._id))) {
+            if (userRole === 'Admin' || (userRole === 'Premium' && product.owner.equals(req.user.email))) {
                 await productService.updateProduct(productId, productUpdated);
                 res.status(200).json({ message: 'Producto actualizado con éxito', product: productUpdated });
             } else {
@@ -122,18 +122,19 @@ export default class ProductController {
     }
 
     async deleteProduct(req, res) {
-        
+
         const productId = req.params.productId;
         const userRole = req.user.rol;
-    
+        const userEmail = req.user.email
+
         try {
             const product = await productService.getProductById(productId);
             if (!product) {
                 return res.status(404).json({ success: false, message: "Producto no encontrado" });
             }
-    
+
             // Verificar si el usuario es administrador o propietario del producto
-            if (userRole === 'Admin' || (userRole === 'Premium' && product.owner.equals(req.user._id))) {
+            if (userRole === 'Admin' || (userRole === 'Premium' && product.owner === userEmail)) {
                 await productService.deleteProduct(productId);
                 res.status(200).json({ success: true, message: 'Producto eliminado con éxito' });
             } else {

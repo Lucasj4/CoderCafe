@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import { configObject } from "./config/config.js";
+import express from 'express'
 
+const app = express()
 
-
-
-const {mongo_url} = configObject;
+const {mongo_url, puerto} = configObject;
 
 // app.listen(puerto, () => {
 //     console.log(`Servidor en ejecución en http://localhost:${puerto}`);

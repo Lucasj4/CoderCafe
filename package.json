@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon src/app.mjs --mode desarrollo",
     "start": "nodemon src/app.mjs --mode produccion",
-    "test": "mocha test/user.test.js"
+    "test": "mocha test/cart.test.js"
   },
   "keywords": [],
   "author": "",

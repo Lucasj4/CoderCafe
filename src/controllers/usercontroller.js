@@ -121,6 +121,7 @@ export class UserController {
         try {
             
             const user = await userService.getUserByEmail( email );
+            
             if (!user) {
                 return res.status(404).send("Usuario no encontrado");
             }
@@ -196,7 +197,7 @@ export class UserController {
             const { uid } = req.params;
     
             const user = await userService.getUserById(uid);
-            req.logger.info("User: " + user);
+         
     
             if (!user) {
                 return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -217,10 +218,4 @@ export class UserController {
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     }
-
-
-
-
-
-
 }

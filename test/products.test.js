@@ -28,11 +28,11 @@ describe('ProductController', () => {
             json: sinon.stub()
         };
         next = sinon.stub();
-        sandbox = sinon.createSandbox(); // Crear un sandbox de Sinon.js
+        sandbox = sinon.createSandbox(); 
     });
 
     afterEach(() => {
-        sandbox.restore(); // Restaurar el sandbox después de cada prueba
+        sandbox.restore(); 
     });
 
     describe('addProduct', () => {

@@ -198,15 +198,24 @@ export class UserController {
     
             const user = await userService.getUserById(uid);
          
-    
+         
             if (!user) {
                 return res.status(404).json({ message: 'Usuario no encontrado' });
             }
-            req.logger.info("User rol: " + user.rol);
+            const requiredDocuments = ['Identificación', 'Comprobante de domicilio', 'Comprobante de estado de cuenta'];
+            const userDocuments = user.documents.map(doc => doc.name);
+
+            const hasRequiredDocuments = requiredDocuments.every(doc => userDocuments.includes(doc));
+
+            if (!hasRequiredDocuments) {
+                return res.status(400).json({ message: 'El usuario debe cargar los siguientes documentos: Identificación, Comprobante de domicilio, Comprobante de estado de cuenta' });
+            }
+
             const newRol = user.rol === 'User' ? 'Premium' : 'User';
     
             const actualizado = await userService.updateUserRoleById(uid,newRol);
             req.logger.info("User actualizado: " + user);
+            
             const response = {
                 message: "User role changed successfully",
                 user: actualizado
@@ -216,6 +225,50 @@ export class UserController {
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Error interno del servidor' });
+        }
+    }
+
+    async uploadDocuments(req, res) {
+        
+        const { uid } = req.params;
+        const uploadedDocuments = req.files;
+      
+        try {
+            const user = await userService.getUserById(uid);
+
+            if (!user) {
+                return res.status(404).send("Usuario no encontrado");
+            }
+
+            // Verificar si se subieron documentos y actualizar el usuario
+            if (uploadedDocuments) {
+                if (uploadedDocuments.document) {
+                    user.documents = user.documents.concat(uploadedDocuments.document.map(doc => ({
+                        name: doc.originalname,
+                        reference: doc.path
+                    })));
+                }
+                if (uploadedDocuments.products) {
+                    user.documents = user.documents.concat(uploadedDocuments.products.map(doc => ({
+                        name: doc.originalname,
+                        reference: doc.path
+                    })));
+                }
+                if (uploadedDocuments.profile) {
+                    user.documents = user.documents.concat(uploadedDocuments.profile.map(doc => ({
+                        name: doc.originalname,
+                        reference: doc.path
+                    })));
+                }
+            }
+
+            // Guardar los cambios en la base de datos
+            await user.save();
+
+            res.status(200).send("Documentos subidos exitosamente");
+        } catch (error) {
+            console.log("Error: " ,error);
+            res.status(500).send('Error interno del servidor');
         }
     }
 }

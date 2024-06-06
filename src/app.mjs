@@ -20,7 +20,7 @@ import { addLogger } from "./utils/logger.js";
 import flash from 'connect-flash'
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUiExpress from "swagger-ui-express";
-
+import methodOverride from 'method-override'
 const app = express();
 app.use(addLogger);
 
@@ -32,7 +32,7 @@ const httpServer = app.listen(PORT, (req, res) => {
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
-
+app.use(methodOverride('_method'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));

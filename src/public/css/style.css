@@ -70,3 +70,50 @@ h1 {
     margin-left: 1rem;
     margin-right: 1rem;
 }
+.cardcontainer{
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.cardprofile{
+    border: 1px solid #4B2E2A;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px;
+    background-color: #E3C6A8;
+}
+.cardprofile__actions{
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.cardprofile__actions__item{
+    width: 90%;
+    margin: 10px;
+}
+.cardprofile__actions__item form{
+    margin: 0;
+}
+.cardprofile__actions__item a{
+    padding: 10px 15px;
+    display: block;
+    text-align: center;
+    border-radius: 10px;
+    background-color:#4B2E2A;
+    width: 100%;
+    color: #fff;
+    text-decoration: none;
+}
+
+.cardprofile__actions__item button{
+    width: 100%;
+    border-radius: 10px;
+    background-color:  #4B2E2A;
+}
+

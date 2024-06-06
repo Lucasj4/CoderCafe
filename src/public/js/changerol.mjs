@@ -1,26 +1,24 @@
-document.getElementById('changeRoleForm').addEventListener('submit', async function(event) {
-    event.preventDefault(); 
-    
-    const form = event.target;
-    const url = form.action;
-    
+document.getElementById('changeRoleButton').addEventListener('click', async function() {
+    const userId = this.getAttribute('data-user-id');
+    console.log(userId); // Usar el ID del usuario desde tu template engine
     try {
-        const response = await fetch(url, {
-            method: 'PUT', // Usar el método PUT
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({}) 
-        });
-        
-        if (!response.ok) {
-            throw new Error('Error al cambiar el rol');
-        }
-        
+      const response = await fetch(`/api/users/premium/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        alert('Rol cambiado exitosamente');
+        // Opcional: refrescar la página o actualizar el contenido dinámicamente
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`);
+      }
     } catch (error) {
-        console.error(error);
-       
+      console.error('Error:', error);
+      alert('Error al cambiar el rol');
     }
-});
+  });

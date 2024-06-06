@@ -1,60 +1,51 @@
-<div class="container mt-5">
+<div class="cardcontainer">
+
   <h1 class="mb-4">Mi Perfil</h1>
 
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Bienvenido,
-        {{user.first_name}}
-        {{user.last_name}}!</h5>
-      <p class="card-text">Rol: {{user.rol}}</p>
+  <div class="cardprofile">
 
-      {{#if this.isPremium}}
-        <div class="d-flex justify-content-center">
-          <div>
-            <a class="btn btn-secondary" href="/realtimeproducts">Modificar
-              Productos</a>
-          </div>
-          <div>
-            <a class="btn btn-secondary" href="/agregarproducto">Agregar Productos</a>
-          </div>
-          <div class="ml-3">
-            <form
-              action="/api/users/premium/{{user._id}}"
-              id="changeRoleForm"
-              method="PUT"
-            >
-              <button class="btn btn-danger changerol" type="submit">Cambiar rol</button>
-            </form>
-          </div>
-          <div>
-            <form
-              action="/api/users/logout"
-              method="POST"
-              class="d-inline mr-3"
-            >
-              <button class="btn btn-danger" type="submit">Logout</button>
-            </form>
-          </div>
+    <h5 class="card-title">Bienvenido,
+      {{user.first_name}}
+      {{user.last_name}}!</h5>
+    <p class="card-text">Rol: {{user.rol}}</p>
+
+    {{#if this.isPremium}}
+
+      <div class="cardprofile__actions">
+        <div class="cardprofile__actions__item">
+          <a href="/realtimeproducts">Modificar Productos</a>
         </div>
-
-      {{else}}
-        <div class="d-flex justify-content-around">
-          <a class="btn btn-info mr-3" href="/chat">Chat en vivo</a>
-          <a class="btn btn-info mr-3" href="/products">Tienda</a>
-          <form action="/api/users/logout" method="POST" class="d-inline mr-3">
-            <button class="btn btn-danger" type="submit">Logout</button>
-          </form>
-          <form
-            action="/api/users/premium/{{user._id}}"
-            id="changeRoleForm"
-            method="PUT"
-          >
-            <button class="btn btn-danger" type="submit">Cambiar rol</button>
+        <div class="cardprofile__actions__item">
+          <a href="/agregarproducto">Agregar Productos</a>
+        </div>
+        <div class="cardprofile__actions__item">
+          <button id="changeRoleButton" data-user-id="{{user._id}}">Cambiar rol</button>
+        </div>
+        <div class="cardprofile__actions__item">
+          <form action="/api/users/logout" method="POST">
+            <button type="submit">Logout</button>
           </form>
         </div>
+      </div>
 
-      {{/if}}
-    </div>
+    {{else}}
+      <div class="d-flex justify-content-around">
+        <a class="btn btn-info mr-3" href="/chat">Chat en vivo</a>
+        <a class="btn btn-info mr-3" href="/products">Tienda</a>
+        <form action="/api/users/logout" method="POST" class="d-inline mr-3">
+          <button class="btn btn-danger" type="submit">Logout</button>
+        </form>
+        <form
+          action="/api/users/premium/{{user._id}}"
+          id="changeRoleForm"
+          method="PUT"
+        >
+          <button class="btn btn-danger" type="submit">Cambiar rol</button>
+        </form>
+      </div>
+
+    {{/if}}
+
   </div>
 </div>
 

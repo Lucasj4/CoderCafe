@@ -23,8 +23,9 @@ import swaggerUiExpress from "swagger-ui-express";
 import methodOverride from 'method-override'
 import { SocketManager } from "./sockets/socketmanager.js";
 import { configObject } from "./config/config.js";
+import { mongo } from "mongoose";
 
-const {puerto} = configObject
+const {puerto, mongo_url} = configObject
 const app = express();
 app.use(addLogger);
 
@@ -47,7 +48,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   store: MongoStore.create({
-    mongoUrl: "mongodb+srv://lucasfjulia:Lebronjames23@cluster0.k62q89m.mongodb.net/ecommercetest?retryWrites=true&w=majority",
+    mongoUrl: mongo_url,
 
   })
 

@@ -22,14 +22,16 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUiExpress from "swagger-ui-express";
 import methodOverride from 'method-override'
 import { SocketManager } from "./sockets/socketmanager.js";
+import { configObject } from "./config/config.js";
 
+const {puerto} = configObject
 const app = express();
 app.use(addLogger);
 
 
-const PORT = 8080;
-const httpServer = app.listen(PORT, (req, res) => {
-  console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+
+const httpServer = app.listen(puerto, (req, res) => {
+  console.log(`Servidor en ejecución en http://localhost:${puerto}`);
 });
 new SocketManager(httpServer)
 const __filename = new URL(import.meta.url).pathname;

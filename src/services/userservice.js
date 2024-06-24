@@ -47,19 +47,19 @@ export class UserService{
     }
 
     async register(data){
-        const { first_name, last_name, email, password, age } = data;
+        const { first_name, last_name, email, password, age, rol } = data;
         try {
-            const newCart = new CartModel();
-            await newCart.save();
+    
 
             // Crear un nuevo usuario con los datos proporcionados
             const newUser = new UserModel({
                 first_name,
                 last_name,
                 email,
-                cart: newCart._id,
+                cart: data.cart._id,
                 password,
-                age
+                age, 
+                rol
             });
 
             await newUser.save();

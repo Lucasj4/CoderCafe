@@ -6,7 +6,8 @@ import { UserService } from "../services/userservice.js";
 import UserDTO from "../dto/user.dto.js";
 import { generateResetToken } from "../utils/tokenreset.js";
 import { EmailManager } from "./emailmanager.js";
-
+import { configObject } from "../config/config.js";
+const {adminEmail, adminPassword} = configObject;
 const emailController = new EmailManager();
 const userService = new UserService();
 
@@ -29,12 +30,21 @@ export class UserController {
             if(existingUser){
                 return res.status(409).send("El usuario ya existe");
             }
-    
+            
+           
             const newCart = new CartModel();
             await newCart.save();
 
             const hashedPassword = createHash(password);
-          
+
+            let role = "User"
+            if(email === adminEmail && password === adminPassword ){
+                console.log("email: ", email);
+                console.log("email variable: ", adminEmail);
+                console.log("Contrase;a: ", password);
+                console.log("Contrase;a variable de entorno: ", adminPassword);
+                role = "Admin";
+            }
     
             const newUser = await userService.register({
                 first_name,
@@ -43,6 +53,7 @@ export class UserController {
                 cart: newCart._id,
                 password: hashedPassword,
                 age,
+                rol: role
             });
     
             await newUser.save();

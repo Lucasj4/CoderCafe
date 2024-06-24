@@ -21,6 +21,8 @@ import flash from 'connect-flash'
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUiExpress from "swagger-ui-express";
 import methodOverride from 'method-override'
+import { SocketManager } from "./sockets/socketmanager.js";
+
 const app = express();
 app.use(addLogger);
 
@@ -29,6 +31,7 @@ const PORT = 8080;
 const httpServer = app.listen(PORT, (req, res) => {
   console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
+new SocketManager(httpServer)
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
@@ -114,54 +117,3 @@ const swaggerOptions = {
 
 const specs = swaggerJSDoc(swaggerOptions);
 app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
-// const productManager = new ProductController();
-// const io = socketIo(httpServer);
-
-// io.on("connection", async (socket) => {
-//   console.log("Un cliente se conectó");
-
-
-//   socket.emit('connected', 'Conexión exitosa');
-
-
-//   socket.emit('updateProducts', await productManager.getProducts());
-
-//   socket.on("Addproduct", async (product) => {
-//     console.log('Recibido evento "Addproduct" en el servidor');
-//     console.log('Producto recibido en el servidor:', product);
-
-//     try {
-//       await productManager.addProduct(product);
-//       console.log('Producto agregado exitosamente');
-//       io.sockets.emit("updateProducts", await productManager.getProducts());
-//     } catch (error) {
-//       console.error("Error al agregar producto:", error);
-//     }
-//   });
-
-//   socket.on("DeleteProduct", async (id) => {
-//     try {
-//       await productManager.deleteProduct(id);
-//       io.sockets.emit("updateProducts", await productManager.getProducts());
-
-//     } catch (error) {
-//       console.error("Error al eliminar producto:", error);
-//     }
-//   })
-
-
-//   socket.on("message", async data => {
-//     try {
-//         await MessageModel.create(data);
-//         const messages = await MessageModel.find();
-//         io.sockets.emit("message", messages);
-//     } catch (error) {
-//         console.error("Error al guardar o recuperar mensajes:", error);
-//     }
-// });
-
-
-// });
-
-
-// export { io };

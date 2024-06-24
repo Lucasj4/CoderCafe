@@ -26,44 +26,55 @@
 </form>
 <script  src="../js/cartFunctions.mjs"></script> --}}
 
-<div class="container mt-5 border border-grey">
-        <h1 class="mb-4">Detalles del Carrito</h1>
+<div class="cart__container">
+  <h1 class="mb-4">Detalles del Carrito</h1>
 
-        <p><strong>ID del Carrito:</strong> {{cartId}}</p>
+  <p><strong>ID del Carrito:</strong> {{cartId}}</p>
 
-        <h2 class="mb-4">Productos en el Carrito:</h2>
-        <ul class="list-group mb-4">
-            {{#each products}}
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <p><strong>Producto:</strong> {{this.product.title}}</p>
-                            <p><strong>Descripción:</strong> {{this.product.description}}</p>
-                            <p><strong>Precio:</strong> ${{this.totalPricePerProduct}}</p>
-                            <p><strong>Categoría:</strong> {{this.product.category}}</p>
-                            <p><strong>Cantidad:</strong> {{this.quantity}}</p>
-                            <p><strong>Stock:</strong> {{this.product.stock}}</p>
-                        </div>
-                        <div class="col-md-4 d-flex align-items-center justify-content-end">
-                            <button onclick="eliminarProducto('{{../cartId}}', '{{this.product._id}}')" class="btn btn-danger">Eliminar Producto</button>
-                        </div>
-                    </div>
-                </li>
-            {{/each}}
-        </ul>
+  <h2 class="mb-4">Productos en el Carrito:</h2>
+  <table class="cart__table ">
+    <thead class="cart__table__thead">
+      <tr>
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Categoría</th>
+        <th>Cantidad</th>
+        <th>Stock</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody class="cart__table__tbody">
+      {{#each products}}
+      <tr>
+            <td class="cart__table__tbody-product">
+                {{this.product.title}}
+                <img src="{{this.product.img}}" alt="">
+            </td>
+            <td>${{this.totalPricePerProduct}}</td>
+            <td>{{this.product.category}}</td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.product.stock}}</td>
+            <td><button onclick="eliminarProducto('{{../cartId}}', '{{this.product._id}}')" class="btn btn-danger">Eliminar</button></td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <button onclick="vaciarCarrito('{{cartId}}')" class="btn btn-danger">Vaciar Carrito</button>
-            <h3>Total de la compra: ${{purchaseTotal}}</h3>
-        </div>
-        
-        <div class="d-flex justify-content-between">
-            <a href="/products" class="btn btn-success mb-3">Seguir comprando</a>
-            <form  method="post" action="/api/carts/{{cartId}}/purchase">
-                <button type="submit" class="btn btn-success">Finalizar Compra</button>
-            </form>
-        </div>
-    </div>
-    <script  src="../js/cartFunctions.mjs"></script>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    {{!-- <button onclick="vaciarCarrito('{{cartId}}')" class="btn btn-danger">Vaciar Carrito</button> --}}
+  
+    <h3>Total ${{purchaseTotal}}</h3>
+  </div>
+
+  <div class="cart__actions">
+    <a href="/products" > <i class="fa-solid fa-arrow-left"></i> Seguir comprando</a>
+    <form method="post" action="/api/carts/{{cartId}}/purchase">
+      <button type="submit" >Finalizar Compra</button>
+    </form>
+  </div>
+</div>
+
+<script src="../js/cartFunctions.mjs"></script>
+
 
 

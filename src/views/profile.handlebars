@@ -30,18 +30,28 @@
 
     {{else}}
       <div class="d-flex justify-content-around">
-        <a class="btn btn-info mr-3" href="/chat">Chat en vivo</a>
-        <a class="btn btn-info mr-3" href="/products">Tienda</a>
-        <form action="/api/users/logout" method="POST" class="d-inline mr-3">
-          <button class="btn btn-danger" type="submit">Logout</button>
-        </form>
-        <form
-          action="/api/users/premium/{{user._id}}"
-          id="changeRoleForm"
-          method="PUT"
-        >
-          <button class="btn btn-danger" type="submit">Cambiar rol</button>
-        </form>
+
+      </div>
+      <div class="cardprofile__actions">
+        <div class="cardprofile__actions__item">
+          <a class="cardprofile__actions__link" href="/chat">Chat en vivo</a>
+
+        </div>
+        <div class="cardprofile__actions__item">
+          <a class="cardprofile__actions__link" href="/products">Tienda</a>
+        </div>
+        <div class="cardprofile__actions__item">
+          <a class="cardprofile__actions__link" href="/uploaddocuments">Cargar documentos</a>
+        </div>
+        <div class="cardprofile__actions__item">
+          <form action="/api/users/logout" method="POST" class="d-inline mr-3">
+            <button type="submit">Logout</button>
+          </form>
+        </div>
+        <div class="cardprofile__actions__item">
+          <button id="changeRoleButton" data-user-id="{{user._id}}">Cambiar rol</button>
+        </div>
+
       </div>
 
     {{/if}}

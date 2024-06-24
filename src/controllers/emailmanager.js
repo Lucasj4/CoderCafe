@@ -53,5 +53,19 @@ export class EmailManager{
             throw new Error("Error al enviar correo electrónico");
         }
     }
-    
+    async sendDeletionEmail(email, firstName) {
+        const mailOptions = {
+            from: 'coderhouse50015@gmail.com',
+            to: email,
+            subject: 'Cuenta eliminada por inactividad',
+            text: `Hola ${firstName},\n\nTu cuenta ha sido eliminada debido a inactividad. Si crees que esto es un error, por favor contacta con soporte.\n\nSaludos,\nEquipo de Soporte`
+        };
+
+        try {
+            await this.transporter.sendMail(mailOptions);
+            console.log(`Correo enviado a ${email}`);
+        } catch (error) {
+            console.error(`Error al enviar correo a ${email}: `, error);
+        }
+    }
 }

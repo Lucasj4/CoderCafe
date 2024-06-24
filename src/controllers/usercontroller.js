@@ -12,7 +12,15 @@ const userService = new UserService();
 
 export class UserController {
 
-
+    async getUsers(req, res) {
+        try {
+            const users = await userService.getUsers();
+            res.status(200).json(users);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+    
     async register(req, res){
         const { first_name, last_name, email, password, age } = req.body;
         try {
@@ -58,11 +66,24 @@ export class UserController {
             res.status(500).send("Ha ocurrido un error interno del servidor.");
         }
     }
-
+    async getIdUser(req, res) {
+        try {
+            if (!req.user) {
+                return res.status(401).send('Usuario no autenticado');
+            }
+    
+            const userId = req.user._id; // Obtener el ID del usuario autenticado
+         
+            res.status(200).json({ userId });
+        } catch (error) {
+            console.error('Error al obtener ID de usuario:', error);
+            res.status(500).send('Error interno del servidor');
+        }
+    }
     async login(req, res) {
 
         const { email, password } = req.body;
-
+        
         try {
             const existingUser = await userService.getUserByEmail(email);
 
@@ -95,16 +116,16 @@ export class UserController {
   
 
     async profile(req, res) {
-        const userDto = new UserDTO(req.user.user.first_name, req.user.user.last_name, req.user.user.rol);
+        const userDto = new UserDTO(req.user.user.first_name, req.user.user.last_name, req.user.user.rol, req.user.user.email);
         const isAdmin = req.user.rol === 'Admin' || "Premium";
 
         res.render("profile", { user: userDto, isAdmin });
     }
 
+    
     async logout(req, res) {
 
         res.clearCookie("coderCookieToken");
-        res.status(200).send("User logged out successfully");
         res.redirect("/");
     }
 
@@ -203,7 +224,7 @@ export class UserController {
                 return res.status(404).json({ message: 'Usuario no encontrado' });
             }
             const requiredDocuments = ['Identificación', 'Comprobante de domicilio', 'Comprobante de estado de cuenta'];
-            const userDocuments = user.documents.map(doc => doc.name);
+            const userDocuments = user.documents.map(doc => doc.name)
 
             const hasRequiredDocuments = requiredDocuments.every(doc => userDocuments.includes(doc));
 
@@ -229,46 +250,80 @@ export class UserController {
     }
 
     async uploadDocuments(req, res) {
-        
-        const { uid } = req.params;
-        const uploadedDocuments = req.files;
-      
+    const { uid } = req.params;
+    const uploadedDocuments = req.files;
+
+    try {
+        const user = await userService.getUserById(uid);
+
+        if (!user) {
+            return res.status(404).send("Usuario no encontrado");
+        }
+
+        // Mapear los nombres según el tipo de documento
+        const documentTypes = {
+            document: "Identificación",
+            products: "Comprobante de domicilio",
+            profile: "Comprobante de estado de cuenta"
+        };
+
+        // Verificar si se subieron documentos y actualizar el usuario
+        if (uploadedDocuments) {
+            if (uploadedDocuments.document) {
+                user.documents = user.documents.concat(uploadedDocuments.document.map(doc => ({
+                    name: documentTypes.document,
+                    reference: doc.path
+                })));
+            }
+            if (uploadedDocuments.products) {
+                user.documents = user.documents.concat(uploadedDocuments.products.map(doc => ({
+                    name: documentTypes.products,
+                    reference: doc.path
+                })));
+            }
+            if (uploadedDocuments.profile) {
+                user.documents = user.documents.concat(uploadedDocuments.profile.map(doc => ({
+                    name: documentTypes.profile,
+                    reference: doc.path
+                })));
+            }
+        }
+
+        // Guardar los cambios en la base de datos
+        await user.save();
+
+        res.status(200).send("Documentos subidos exitosamente");
+    } catch (error) {
+        console.log("Error:", error);
+        res.status(500).send('Error interno del servidor');
+    }
+}
+    async deleteInactiveUsers(req, res, minutes = 2880) { // Usar 30 minutos para pruebas
         try {
-            const user = await userService.getUserById(uid);
+            const inactiveUsers = await userService.getInactiveUsers(minutes);
+            const deletedUsers = [];
+          
 
-            if (!user) {
-                return res.status(404).send("Usuario no encontrado");
+            if(inactiveUsers){
+                for (const user of inactiveUsers) {
+                    await emailController.sendDeletionEmail(user.email, user.first_name);
+                    await userService.deleteUserById(user._id);
+                    deletedUsers.push(user)
+                }
+    
+                console.log(`Eliminados ${inactiveUsers.length} usuarios por inactividad`);
+                res.status(200).json({
+                    message: `Eliminados ${deletedUsers.length} usuarios por inactividad`,
+                    deletedUsers: deletedUsers
+                });
+            }else{
+                res.status(200).json({
+                    message: "No hay usuarios inactivos"
+                });
             }
-
-            // Verificar si se subieron documentos y actualizar el usuario
-            if (uploadedDocuments) {
-                if (uploadedDocuments.document) {
-                    user.documents = user.documents.concat(uploadedDocuments.document.map(doc => ({
-                        name: doc.originalname,
-                        reference: doc.path
-                    })));
-                }
-                if (uploadedDocuments.products) {
-                    user.documents = user.documents.concat(uploadedDocuments.products.map(doc => ({
-                        name: doc.originalname,
-                        reference: doc.path
-                    })));
-                }
-                if (uploadedDocuments.profile) {
-                    user.documents = user.documents.concat(uploadedDocuments.profile.map(doc => ({
-                        name: doc.originalname,
-                        reference: doc.path
-                    })));
-                }
-            }
-
-            // Guardar los cambios en la base de datos
-            await user.save();
-
-            res.status(200).send("Documentos subidos exitosamente");
+        
         } catch (error) {
-            console.log("Error: " ,error);
-            res.status(500).send('Error interno del servidor');
+            console.error("Error interno del servidor:", error);
         }
     }
 }

@@ -1,0 +1,26 @@
+<div class="documents__main">
+        <h1>Subir Documentos</h1>
+        <div class="documents__formcontainer">
+            <form class="documents__form" id="uploadForm" enctype="multipart/form-data">
+                <div class="documents__form-item">
+                    <label for="document">Identificacion</label>
+                    <input type="file" id="document" name="document" multiple />
+                    <span id="documentName" class="file-name"></span>
+                </div>
+                <div class="documents__form-item">
+                    <label for="products">Comprobante domicilio</label>
+                    <input type="file" id="products" name="products" multiple />
+                    <span id="productsName" class="file-name"></span>
+                </div>
+                <div class="documents__form-item">
+                    <label for="profile">Comprobante estado de cuenta</label>
+                    <input type="file" id="profile" name="profile" multiple />
+                    <span id="profileName" class="file-name"></span>
+                </div>
+                <button type="submit">Subir Documentos</button>
+            </form>
+        </div>
+</div>
+
+<script src="../js/documents.js"></script>
+

@@ -26,6 +26,8 @@ viewsRouter.get("/profile", viewController.renderProfile);
 
 viewsRouter.get("/", viewController.renderLogin);
 
+viewsRouter.get('/chat', viewController.renderChat)
+
 viewsRouter.get("/reset-password", viewController.renderResetPassword);
 
 viewsRouter.get("/password", viewController.renderChangePassword);
@@ -35,6 +37,8 @@ viewsRouter.get("/confirmacion-envio", viewController.renderConfirmation );
 viewsRouter.get("/panel-premium", viewController.renderPremium);
 
 viewsRouter.get("/agregarproducto", checkUserRole(['Premium','Admin']),viewController.renderAddProduct);
+
+viewsRouter.get("/uploaddocuments", viewController.renderUploadDocuments)
 
 
 

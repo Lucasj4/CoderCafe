@@ -7,7 +7,7 @@ const productService = new ProductService();
 export default class ProductController {
 
     async addProduct(req, res, next) {
-        const { title, description, price, code, stock, category, thumbnails, status } = req.body;
+        const { title, description, price, code, stock, category, thumbnails, status, img} = req.body;
 
         const roleUser = req.user.user.rol;
 
@@ -16,7 +16,7 @@ export default class ProductController {
             return res.status(403).send('Acceso denegado. No tienes permiso para acceder a esta página.');
         }
         try {
-            if (!title || !description || !price || !code || !stock || !category || status === undefined) {
+            if (!title || !description || !price || !code || !stock || !category || !status || !img === undefined) {
                 const error = new CustomError({
                     name: "Producto nuevo",
                     cause: generateProductErrorInfo({ title, description, price, code, stock, category, status }),
@@ -42,6 +42,7 @@ export default class ProductController {
                 price,
                 code,
                 stock,
+                img,
                 category,
                 status,
                 thumbnails: thumbnails || [],

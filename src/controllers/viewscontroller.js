@@ -1,11 +1,13 @@
 import ProductModel from "../models/productmodel.js";
 import { CartService } from "../services/cartservice.js";
 const cartService = new CartService();
+import { UserService } from "../services/userservice.js";
+const userService = new UserService();
 
 export class ViewController {
     async renderProducts(req, res) {
         try {
-            const { page = 1, limit = 3 } = req.query;
+            const { page = 1, limit = 9 } = req.query;
     
             const skip = (page - 1) * limit;
     
@@ -155,6 +157,14 @@ export class ViewController {
         res.render("agregarproducto")
     }
 
+    async renderUsers(req,res){
+        const users = await userService.getUsers();
+        res.render('users', {users: users} )
+    }
+
+    async renderUploadDocuments(req, res){
+        res.render("uploaddocuments")
+    }
 
 
 }

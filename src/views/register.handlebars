@@ -1,23 +1,39 @@
-<form action="/api/users/register" method="post">
-  <label for="first_name">First Name:</label>
-  <input type="text" id="first_name" name="first_name" required />
-  <br />
-  <label for="last_name">Last Name:</label>
-  <input type="text" id="last_name" name="last_name" required />
-  <br />
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email" required />
-  <br />
-  <label for="password">Password:</label>
-  <input type="password" id="password" name="password" required />
-  <br />
-  <label for="age">Age:</label>
-  <input type="number" id="age" name="age" required />
-  <br />
-  {{!-- <select id="rol" name="rol" required>
+<div class="register__main">
+  
+  <div class="register__formcontainer">
+    <form  class="register__form " action="/api/users/register" method="post">
+    <h2>Registro</h2>
+      <div class="register__form__item">
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required />
+      </div>
+      <div class="register__form__item">
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required />
+      </div>
+
+      <div class="register__form__item">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div class="register__form__item">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      <div class="register__form__item">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required />
+      </div>
+
+      {{! <select id="rol" name="rol" required>
     <option value="">Select Role</option>
     <option value="admin">Admin</option>
     <option value="usuario">Usuario</option>
-  </select> --}}
-  <button type="submit">Register</button>
-</form>
+  </select> }}
+    <div class="register__form__button">
+      <button type="submit">Register</button>
+    </div>
+      
+    </form>
+  </div>
+</div>

@@ -25,14 +25,15 @@ import { SocketManager } from "./sockets/socketmanager.js";
 import { configObject } from "./config/config.js";
 import { mongo } from "mongoose";
 
-const {puerto, mongo_url} = configObject
+const { mongo_url} = configObject
 const app = express();
 app.use(addLogger);
 
 
+const PORT = process.env.PORT||8080;
 
-const httpServer = app.listen(puerto, (req, res) => {
-  console.log(`Servidor en ejecución en http://localhost:${puerto}`);
+const httpServer = app.listen(PORT,"0.0.0.0",(req, res) => {
+  console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
 new SocketManager(httpServer)
 const __filename = new URL(import.meta.url).pathname;
@@ -83,14 +84,6 @@ app.use((req, res, next) => {
 initializePassport();
 
 
-app.get("/loggertest", (req, res) => {
-  req.logger.error("Error fatal");
-  req.logger.debug("Mensaje de debug");
-  req.logger.info("Mensaje de Info");
-  req.logger.warning("Mensaje de Warning");
-
-  res.send("Test de logs");
-})
 app.get('/mockingproducts', (req, res) => {
   const products = [];
 

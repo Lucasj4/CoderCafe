@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/app.mjs --mode desarrollo",
-    "start": "nodemon src/app.mjs --mode produccion",
+    "start": "nodemon src/app.mjs --mode desarrollo",
     "test": "mocha test/cart.test.js"
   },
   "keywords": [],

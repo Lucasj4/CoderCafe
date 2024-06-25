@@ -22,6 +22,8 @@ export class UserService{
         }
     }
 
+    
+
     async getUsers(){
         try {
             const users = await UserModel.find();

@@ -289,6 +289,10 @@ h1 {
 .products__card button {
   background: var(--very-dark-grey);
 }
+
+.products__card form{
+  margin-bottom: 1rem;
+}
 /*Upload documents*/
 
 .documents__main {
@@ -500,6 +504,7 @@ h1 {
   flex-direction: column;
   width: 60%;
   align-items: center;
+  margin-bottom: 2rem;
 }
 
 .users__tablecontainer__thead th{
@@ -518,4 +523,11 @@ h1 {
   text-align: center;
   padding: 10px 0;
   border-bottom: 1px solid var(--light-grey);
+}
+
+.users__action button{
+  background-color: var(--very-dark-grey);
+  border-radius: 4px;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.5rem;
 }

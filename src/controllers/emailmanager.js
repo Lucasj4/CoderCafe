@@ -68,4 +68,20 @@ export class EmailManager{
             console.error(`Error al enviar correo a ${email}: `, error);
         }
     }
+
+    async sendDeletionProductEmail(email, first_name){
+        const mailOptions = {
+            from: 'coderhouse50015@gmail.com',
+            to: email,
+            subject: 'Producto eliminado',
+            text: `Hola ${first_name},\n\nTu producto ha sido eliminado. Si crees que esto es un error, por favor contacta con soporte.\n\nSaludos,\nEquipo de Soporte`
+        };
+
+        try {
+            await this.transporter.sendMail(mailOptions);
+            console.log(`Correo enviado a ${email}`);
+        } catch (error) {
+            console.error(`Error al enviar correo a ${email}: `, error);
+        }
+    }
 }

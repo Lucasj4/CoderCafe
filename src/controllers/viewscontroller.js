@@ -7,6 +7,7 @@ const userService = new UserService();
 export class ViewController {
     async renderProducts(req, res) {
         try {
+            
             const { page = 1, limit = 9 } = req.query;
     
             const skip = (page - 1) * limit;
@@ -30,8 +31,9 @@ export class ViewController {
 
         
             const cartId = req.user.cart 
-          
-    
+            const isAdmin = req.user.rol === "Admin";
+           
+           
             res.render("products", {
                 products: newArray,
                 hasPrevPage,
@@ -41,7 +43,8 @@ export class ViewController {
                 currentPage: parseInt(page),
                 totalPages,
                 cartId,
-                limit: parseInt(limit) // Pasar el límite para la construcción de URL en la plantilla
+                limit: parseInt(limit) ,// Pasar el límite para la construcción de URL en la plantilla
+                isAdmin
             });
     
         } catch (error) {
@@ -124,8 +127,9 @@ export class ViewController {
     async renderProfile(req, res) {
         const userData = req.user;
         const isPremium= req.user.rol === "Premium"
+        const isAdmin= req.user.rol === "Admin"
      
-        res.render('profile', { user: userData, isPremium});
+        res.render('profile', { user: userData, isPremium, isAdmin});
     }
 
     async renderChat(req, res) {

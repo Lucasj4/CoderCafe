@@ -91,6 +91,8 @@ export class UserController {
             res.status(500).send('Error interno del servidor');
         }
     }
+
+   
     async login(req, res) {
 
         const { email, password } = req.body;
@@ -309,7 +311,7 @@ export class UserController {
         res.status(500).send('Error interno del servidor');
     }
 }
-    async deleteInactiveUsers(req, res, minutes = 2880) { // Usar 30 minutos para pruebas
+    async deleteInactiveUsers(req, res, minutes = 2880) { // Usar 30 minutos para pruebas 2880
         try {
             const inactiveUsers = await userService.getInactiveUsers(minutes);
             const deletedUsers = [];

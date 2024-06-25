@@ -2,7 +2,11 @@ import { ProductService } from "../services/productservice.js";
 import CustomError from "../services/errors/custom-error.js";
 import { generateProductErrorInfo } from "../services/errors/info.js";
 import { Errors } from "../services/errors/enums.js";
+import { EmailManager } from "./emailmanager.js";
+import { UserService } from "../services/userservice.js";
+const emailManager = new EmailManager();
 const productService = new ProductService();
+const userService = new UserService();
 
 export default class ProductController {
 
@@ -124,29 +128,41 @@ export default class ProductController {
 
     async deleteProduct(req, res) {
 
-        const productId = req.params.productId;
-        const userRole = req.user.rol;
-        const userEmail = req.user.email
+        const productId = req.params.pid;
+        const userRol = req.user.rol;
 
         try {
             const product = await productService.getProductById(productId);
+            
             if (!product) {
                 return res.status(404).json({ success: false, message: "Producto no encontrado" });
             }
 
+            const user = await userService.getUserByEmail(product.owner)
+
+            
             // Verificar si el usuario es administrador o propietario del producto
-            if (userRole === 'Admin' || (userRole === 'Premium' && product.owner === userEmail)) {
-                await productService.deleteProduct(productId);
+            if (product.owner === user.email && user.rol === "Premium" && userRol === "Admin" ) {
+                try {
+                    await productService.deleteProduct(productId);
+                    emailManager.sendDeletionProductEmail(user.email, user.first_name )
+                    
+                } catch (error) {
+                    throw error;
+                }
+                
                 res.status(200).json({ success: true, message: 'Producto eliminado con éxito' });
             } else {
                 res.status(403).json({ success: false, message: 'No tienes permiso para eliminar este producto' });
             }
         } catch (error) {
             req.logger.error("Error al eliminar producto:", error.message);
+            console.log("Error al eliminar producto: ", error);
             res.status(500).json({ success: false, error: "Error interno del servidor al eliminar el producto" });
         }
     }
 
+  
 
 }
 

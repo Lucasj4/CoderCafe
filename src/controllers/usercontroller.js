@@ -248,6 +248,7 @@ export class UserController {
             const newRol = user.rol === 'User' ? 'Premium' : 'User';
     
             const actualizado = await userService.updateUserRoleById(uid,newRol);
+            
             req.logger.info("User actualizado: " + user);
             
             const response = {

@@ -11,7 +11,14 @@
           <p class="products__card__description">{{description}}</p>
           <p class="products__card__price">${{price}}</p>
         </div>
-        <form action="/api/carts/{{../cartId}}/product/{{id}}" method="POST">
+     
+        
+        <form action="/api/carts/{{../cartId}}/product/{{id}}" method="POST" class="products__card__form">
+          <div class="products__quantity">
+            <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity(this)">-</button>
+              <input type="number" class="form-control" value="1" name="quantity" id="quantityInput" readonly>
+            <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity(this)">+</button>
+          </div>
           <button class="btnMios" type="submit">Agregar al Carrito</button>
         </form>
         
@@ -38,3 +45,21 @@
 </div>
 
 <script src="../js/deleteProduct.mjs"></script>
+
+<script>
+    function decreaseQuantity(button) {
+        let input = button.parentNode.querySelector('input[type=number]');
+        let currentValue = parseInt(input.value);
+        if (!isNaN(currentValue) && currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+
+    function increaseQuantity(button) {
+        let input = button.parentNode.querySelector('input[type=number]');
+        let currentValue = parseInt(input.value);
+        if (!isNaN(currentValue)) {
+            input.value = currentValue + 1;
+        }
+    }
+</script>

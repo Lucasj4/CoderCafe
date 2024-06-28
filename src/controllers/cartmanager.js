@@ -29,6 +29,8 @@ export default class CartController {
         const quantity = req.body.quantity || 1;
         const emailUser = req.user.email;
         const ownerProduct = req.body.owner;
+
+        console.log("Cantidad de productos: ", quantity);
     
         try {
             const product = await productService.getProductById(productId);

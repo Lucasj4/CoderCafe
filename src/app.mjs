@@ -33,7 +33,7 @@ app.use(addLogger);
 const PORT = process.env.PORT||8080;
 
 const httpServer = app.listen(PORT,"0.0.0.0",(req, res) => {
-  console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+  console.log(`Servidor en ejecución en ${PORT}`);
 });
 new SocketManager(httpServer)
 const __filename = new URL(import.meta.url).pathname;

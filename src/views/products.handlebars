@@ -1,29 +1,29 @@
 <div class="products__container">
-  <h1>Lista de Productos</h1>
+  <a href="/profile" class="products__profile__floating">👤 Mi Perfil</a>
+  <h1 class="products__title">Lista de Productos</h1>
 
   <div class="products">
     {{#each products}}
       <div class="products__card">
-        <img src="{{img}}" alt="">
+        <img src="{{img}}" alt="Imagen del producto" class="products__card__img">
         <div class="products__card__texts">
           <h2 class="products__card__title">{{title}}</h2>
           <p class="products__card__category">{{category}}</p>
           <p class="products__card__description">{{description}}</p>
           <p class="products__card__price">${{price}}</p>
         </div>
-     
         
         <form action="/api/carts/{{../cartId}}/product/{{id}}" method="POST" class="products__card__form">
           <div class="products__quantity">
-            <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity(this)">-</button>
-              <input type="number" class="form-control" value="1" name="quantity" id="quantityInput" readonly>
-            <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity(this)">+</button>
+            <button type="button" class="products__quantity__btn" onclick="decreaseQuantity(this)">-</button>
+            <input type="number" class="products__quantity__input" value="1" name="quantity" id="quantityInput" readonly>
+            <button type="button" class="products__quantity__btn" onclick="increaseQuantity(this)">+</button>
           </div>
-          <button class="btnMios" type="submit">Agregar al Carrito</button>
+          <button class="products__addcart__btn" type="submit">Agregar al Carrito</button>
         </form>
         
         {{#if ../isAdmin}}
-            <button class="product__button delete-product-btn" data-product-id="{{id}}" type="submit">Eliminar Producto</button>
+            <button class="products__delete__btn delete-product-btn" data-product-id="{{id}}" type="submit">Eliminar Producto</button>
         {{/if}}
       </div>
     {{/each}}
@@ -31,16 +31,18 @@
 
   <div class="products__card__pages">
     {{#if hasPrevPage}}
-      <a href="http://localhost:8080/products?page={{prevPage}}&limit={{limit}}">
+      <a href="http://localhost:8080/products?page={{prevPage}}&limit={{limit}}" class="products__pagination__link">
         <p>Anterior</p>
       </a>
     {{/if}}
-    <p>{{currentPage}} de {{totalPages}}</p>
+    <p class="products__pagination__text">{{currentPage}} de {{totalPages}}</p>
     {{#if hasNextPage}}
-      <a href="http://localhost:8080/products?page={{nextPage}}&limit={{limit}}">
+      <a href="http://localhost:8080/products?page={{nextPage}}&limit={{limit}}" class="products__pagination__link">
         <p>Siguiente</p>
       </a>
     {{/if}}
+
+    
   </div>
 </div>
 

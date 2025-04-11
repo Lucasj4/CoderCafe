@@ -1,67 +1,54 @@
-<div class="cardcontainer">
-  <h1 class="mb-4">Mi Perfil</h1>
+<div >
+  <div class="cardcontainer">
+    <h1 class="mb-4 cardprofile__title">Mi Perfil</h1>
 
-  <div class="cardprofile">
-    <h5 class="card-title">Bienvenido, {{user.first_name}} {{user.last_name}}!</h5>
-    <p class="card-text">Rol: {{user.rol}}</p>
+    <div class="cardprofile">
+      <h5 class="card-title">Bienvenido,
+        {{user.first_name}}
+        {{user.last_name}}!</h5>
+      <p class="card-text">Rol: <span class="user-role">{{user.rol}}</span></p>
 
-    {{#if isPremium}}
       <div class="cardprofile__actions">
         <div class="cardprofile__actions__item">
-          <a class="cardprofile__actions__link" href="/products">Tienda</a>
+          <a class="cardprofile__actions__link" href="/products">🛒 Tienda</a>
         </div>
 
-        <div class="cardprofile__actions__item">
-          <a href="/agregarproducto">Agregar Productos</a>
-        </div>
-        <div class="cardprofile__actions__item">
-          <button id="changeRoleButton" data-user-id="{{user._id}}">Cambiar rol</button>
-        </div>
+        {{#if isPremium}}
+          <div class="cardprofile__actions__item">
+            <a class="cardprofile__actions__link" href="/agregarproducto">➕
+              Agregar Productos</a>
+          </div>
+          <div class="cardprofile__actions__item">
+            <button id="changeRoleButton" data-user-id="{{user._id}}">🔄 Cambiar
+              rol</button>
+          </div>
+        {{else if isAdmin}}
+          <div class="cardprofile__actions__item">
+            <a class="cardprofile__actions__link" href="/api/users">👥 Usuarios</a>
+          </div>
+          <div class="cardprofile__actions__item">
+            <button>📦 Productos</button>
+          </div>
+        {{else}}
+          <div class="cardprofile__actions__item">
+            <a class="cardprofile__actions__link" href="/chat">💬 Chat en vivo</a>
+          </div>
+          <div class="cardprofile__actions__item">
+            <a class="cardprofile__actions__link" href="/uploaddocuments">📂
+              Cargar documentos</a>
+          </div>
+          <div class="cardprofile__actions__item">
+            <button id="changeRoleButton" data-user-id="{{user._id}}">🔄 Cambiar
+              rol</button>
+          </div>
+        {{/if}}
         <div class="cardprofile__actions__item">
           <form action="/api/users/logout" method="POST">
-            <button type="submit">Logout</button>
+            <button type="submit">🚪 Logout</button>
           </form>
         </div>
       </div>
-    {{else if isAdmin}}
-      <div class="cardprofile__actions">
-        <div class="cardprofile__actions__item">
-          <a class="cardprofile__actions__link" href="/products">Tienda</a>
-        </div>
-        <div class="cardprofile__actions__item">
-          <a class="cardprofile__actions__link" href="/api/users">Usuarios</a>
-        </div>
-        <div class="cardprofile__actions__item">
-          <form action="/api/users/logout" method="POST"  class="d-inline mr-3">
-            <button type="submit">Logout</button>
-          </form>
-        </div>
-        <div class="cardprofile__actions__item">
-          <button>Productos</button>
-        </div>
-      </div>
-    {{else}}
-      <div class="cardprofile__actions">
-        <!-- Acciones predeterminadas si no es ni Premium ni Admin -->
-        <div class="cardprofile__actions__item">
-          <a class="cardprofile__actions__link" href="/chat">Chat en vivo</a>
-        </div>
-        <div class="cardprofile__actions__item">
-          <a class="cardprofile__actions__link" href="/products">Tienda</a>
-        </div>
-        <div class="cardprofile__actions__item">
-          <a class="cardprofile__actions__link" href="/uploaddocuments">Cargar documentos</a>
-        </div>
-        <div class="cardprofile__actions__item">
-          <form action="/api/users/logout" method="POST" class="d-inline mr-3">
-            <button type="submit">Logout</button>
-          </form>
-        </div>
-        <div class="cardprofile__actions__item">
-          <button id="changeRoleButton" data-user-id="{{user._id}}">Cambiar rol</button>
-        </div>
-      </div>
-    {{/if}}
+    </div>
   </div>
 </div>
 

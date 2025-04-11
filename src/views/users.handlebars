@@ -2,32 +2,32 @@
 
   <h1 class="users__title">Users List</h1>
   <div class="users__tablecontainer">
-    <table>
-    <thead class="users__tablecontainer__thead">
-      <tr>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Rol</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody  class="users__tablecontainer__tbody">
-      {{#each users}}
+    <table class="users__table">
+      <thead class="users__tablecontainer__thead">
         <tr>
-          <td>{{this.firstName}}</td>
-          <td> {{this.lastName}}</td>
-          <td> {{this.email}}</td>
-          <td> {{this.rol}}</td>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Email</th>
+          <th>Rol</th>
         </tr>
-
-      {{/each}}
-
-    </tbody>
-  </table>
+      </thead>
+      <tbody class="users__tablecontainer__tbody">
+        {{#each users}}
+          <tr>
+            <td>{{this.firstName}}</td>
+            <td>{{this.lastName}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.rol}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </div>
+
   <div class="users__action">
-      <button type="submit" class="users__action__button">Eliminar usuarios</button>
+    <button type="submit" class="users__action__button">Eliminar usuarios</button>
   </div>
+
 </div>
 
 <script src="../js/deleteUsers.mjs"></script>

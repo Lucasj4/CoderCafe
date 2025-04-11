@@ -4,6 +4,7 @@ import { generateProductErrorInfo } from "../services/errors/info.js";
 import { Errors } from "../services/errors/enums.js";
 import { EmailManager } from "./emailmanager.js";
 import { UserService } from "../services/userservice.js";
+import { generateRandomCode } from "../utils/generatecode.js";
 const emailManager = new EmailManager();
 const productService = new ProductService();
 const userService = new UserService();

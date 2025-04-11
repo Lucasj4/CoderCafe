@@ -1,12 +1,16 @@
-<h1>Bienvenidos a nuestro Chat Comunitario! 50015</h1>
+  <div class="chat__container">
+        <h1 class="chat__title">Bienvenidos a nuestro Chat Comunitario! 🚀</h1>
+        
+        <div class="chat__box">
+            <input type="text" id="chatBox" placeholder="Escribe tu mensaje...">
+            <button id="sendButton">Enviar</button>
+        </div>
+        
+        <div class="chat__messages">
+            <p id="messagesLogs"></p>
+        </div>
+    </div>
 
-<div>
-    <input type="text" id="chatBox">
-</div>
-
-<div>
-    <p id="messagesLogs"></p>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>

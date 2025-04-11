@@ -2,43 +2,41 @@
   <div class="login__container">
     <h1 class="login__title">Login</h1>
     <div class="login__form__container">
-           <form action="/api/users/login" method="POST" id="loginForm">
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          name="email"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          name="password"
-          required
-        />
-      </div>
-    
-    <div class="login__buttons">
-      <button type="submit" >Login</button>
-      <a
-        href="http://localhost:8080/register"
-        class="btn btn-secondary ml-2"
-      >Register</a>
+      <form action="/api/users/login" method="POST" id="loginForm">
+        <div class="form-group login__form-group">
+          <label for="email" class="login__label">Email:</label>
+          <input
+            type="email"
+            class="form-control login__input"
+            id="email"
+            name="email"
+            required
+          />
+        </div>
+        <div class="form-group login__form-group">
+          <label for="password" class="login__label">Password:</label>
+          <input
+            type="password"
+            class="form-control login__input"
+            id="password"
+            name="password"
+            required
+          />
+        </div>
 
+        <div class="login__buttons">
+          <button type="submit" class="login__button">Login</button>
+          <a
+            href="http://localhost:8080/register"
+            class="btn btn-secondary ml-2 login__register-link"
+          >Register</a>
+        </div>
+      </form>
     </div>
-    </form>
-    </div>
- 
-    <div class="login__password" />
-      <p class="mt-3">¿Olvidaste tu contraseña?</p>
-      <a href="/reset-password">Restablecer contraseña</a>
+
+    <div class="login__password">
+      <p class="login__password__text">¿Olvidaste tu contraseña?</p>
+      <a href="/reset-password" class="login__reset-link">Restablecer contraseña</a>
     </div>
   </div>
-
 </div>

@@ -1,39 +1,34 @@
 <div class="register__main">
-  
-  <div class="register__formcontainer">
-    <form  class="register__form " action="/api/users/register" method="post">
-    <h2>Registro</h2>
-      <div class="register__form__item">
-        <label for="first_name">First Name:</label>
-        <input type="text" id="first_name" name="first_name" required />
-      </div>
-      <div class="register__form__item">
-        <label for="last_name">Last Name:</label>
-        <input type="text" id="last_name" name="last_name" required />
-      </div>
+  <div class="register__container">
+    <h2 class="register__title">Registro</h2>
+    <div class="register__formcontainer">
+      <form class="register__form" action="/api/users/register" method="post">
+        <div class="register__form__item">
+          <label for="first_name" class="register__label">Nombre:</label>
+          <input type="text" id="first_name" name="first_name" class="register__input" required />
+        </div>
+        <div class="register__form__item">
+          <label for="last_name" class="register__label">Apellido:</label>
+          <input type="text" id="last_name" name="last_name" class="register__input" required />
+        </div>
 
-      <div class="register__form__item">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
-      </div>
-      <div class="register__form__item">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required />
-      </div>
-      <div class="register__form__item">
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age" required />
-      </div>
+        <div class="register__form__item">
+          <label for="email" class="register__label">Email:</label>
+          <input type="email" id="email" name="email" class="register__input" required />
+        </div>
+        <div class="register__form__item">
+          <label for="password" class="register__label">Contraseña:</label>
+          <input type="password" id="password" name="password" class="register__input" required />
+        </div>
+        <div class="register__form__item">
+          <label for="age" class="register__label">Edad:</label>
+          <input type="number" id="age" name="age" class="register__input" required />
+        </div>
 
-      {{! <select id="rol" name="rol" required>
-    <option value="">Select Role</option>
-    <option value="admin">Admin</option>
-    <option value="usuario">Usuario</option>
-  </select> }}
-    <div class="register__form__button">
-      <button type="submit">Register</button>
+        <div class="register__form__button">
+          <button type="submit" class="register__button">Registrar</button>
+        </div>
+      </form>
     </div>
-      
-    </form>
   </div>
 </div>

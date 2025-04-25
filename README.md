@@ -1,4 +1,4 @@
-🛒 CoderCafe E-commerce
+🛒 CoderCafe
 CoderCafe es una aplicación de e-commerce desarrollada con JavaScript, Express y Handlebars que permite a los usuarios comprar productos, administrarlos, y experimentar funcionalidades avanzadas como roles, autenticación, WebSockets y tests automatizados.
 
 🔗 Demo Online: https://codercafe.onrender.com
